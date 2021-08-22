@@ -1,8 +1,12 @@
 package main
 
+import (
+	"star-server/model"
+	"star-server/routes"
+)
 
-import "fmt"  // 导入内置 fmt 包
+func main() {
+	model.InitDb()
 
-func main(){  // main函数，是程序执行的入口
-	fmt.Println("Hello World!")  // 在终端打印 Hello World!
+	routes.InitRouter()
 }
