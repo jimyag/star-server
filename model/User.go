@@ -16,7 +16,7 @@ type User struct {
 	Province  string `gorm:"type:varchar(50);" json:"province"`
 	City      string `gorm:"type:varchar(50);" json:"city"`
 	Language  string `gorm:"type:varchar(20);" json:"language"`
-	Country   string `gorm:"type:varchar(50);"json:"country"`
+	Country   string `gorm:"type:varchar(50);" json:"country"`
 }
 
 func CheckUser(id uint) (code int) {
@@ -34,6 +34,15 @@ func CreateUser(data *User) (code int) {
 		return errmsg.ERROR // 500
 	}
 	return errmsg.SUCCESS
+}
+
+func GetUser(id int) (User, int) {
+	var user User
+	err := db.Limit(1).Where("ID = ?", id).Find(&user).Error
+	if err != nil {
+		return user, errmsg.ERROR
+	}
+	return user, errmsg.SUCCESS
 }
 
 // GetUsers 获得用户列表

@@ -19,7 +19,7 @@ type MyClaims struct {
 
 // SetToken 生成token
 func SetToken(openid string) (string, int) {
-	expireTime := time.Now().Add(10 * time.Hour)
+	expireTime := time.Now().Add(100000 * time.Hour)
 	SetClaim := MyClaims{
 		openid,
 		jwt.StandardClaims{
