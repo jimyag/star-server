@@ -30,3 +30,13 @@ func GetSector(pageSize int, pageIndex int) ([]Sector, int) {
 	}
 	return sectors, errmsg.SUCCESS
 }
+
+func UseNameGetSector(sectorName string) (Sector, int) {
+	var sector Sector
+	err := db.Where("sector_name=?", sectorName).Find(&sector).Error
+	if err != nil {
+		return sector, errmsg.ERROR
+	}
+	return sector, errmsg.SUCCESS
+
+}

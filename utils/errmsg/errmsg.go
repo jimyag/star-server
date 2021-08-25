@@ -15,6 +15,7 @@ const (
 	ParameterConstraintError = 301
 	// SecretKeyError 部门
 	SecretKeyError = 401
+	SectorNotExist = 402
 	// StudentNotExist 学生
 	StudentNotExist = 501
 )
@@ -30,6 +31,7 @@ var codeMsg = map[int]string{
 	TokenCreateError:         "Token生成错误",
 	ParameterConstraintError: "参数格式错误",
 	SecretKeyError:           "邀请码错误",
+	SectorNotExist:           "部门不存在",
 	StudentNotExist:          "该学生不存在",
 }
 

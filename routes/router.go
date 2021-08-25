@@ -20,6 +20,9 @@ func InitRouter() {
 		authV1.POST("notice/add", v1.AddNotice)
 		authV1.POST("paper/add", v1.CreatePaper)
 		authV1.POST("sector/add", v1.CreateSector)
+		authV1.POST("student/add", v1.CreateStudent)
+		authV1.GET("schedule", v1.GetSchedule)
+		authV1.POST("schedule/add", v1.AddOneRecord)
 	}
 	routerV1 := r.Group("api/v1")
 	{
@@ -27,7 +30,7 @@ func InitRouter() {
 		routerV1.GET("notice", v1.GetNotice)
 		routerV1.GET("paper", v1.GetPaper)
 		routerV1.GET("sector", v1.GetSector)
-
+		routerV1.GET("student", v1.GetStudent)
 	}
 
 	err := r.Run(utils.HttpPort)

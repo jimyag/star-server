@@ -110,37 +110,46 @@ func GetUser(context *gin.Context) {
 
 	id, _ := strconv.Atoi(context.Param("id"))
 	if id < 1 {
-
+		context.JSON(http.StatusOK, gin.H{
+			"code": errmsg.ERROR,
+			"msg":  errmsg.GetErrMsg(errmsg.ERROR),
+			"data": nil,
+		})
+		context.Abort()
+		return
 	}
 	opid := context.Keys["openid"]
 	var openid = opid.(string)
 	uToken := model.UseOpenidGetUid(openid)
+	//fmt.Println(uToken.Uid)
+	//fmt.Println(id)
 	if (uint(id)) == uToken.Uid {
-
+		data, code := model.GetUser(id)
+		if code == errmsg.ERROR {
+			code = errmsg.UserNotExist
+			context.JSON(http.StatusOK, gin.H{
+				"code": code,
+				"msg":  errmsg.GetErrMsg(code),
+				"data": nil,
+			})
+			context.Abort()
+			return
+		}
+		context.JSON(http.StatusOK, gin.H{
+			"code": code,
+			"msg":  errmsg.GetErrMsg(code),
+			"data": data,
+		})
+		context.Abort()
+		return
+	} else {
+		code := errmsg.UserNotExist
+		context.JSON(http.StatusOK, gin.H{
+			"code": code,
+			"msg":  errmsg.GetErrMsg(code),
+			"data": nil,
+		})
 	}
-	//data, code := model.GetUser(id)
-	//if code == errmsg.ERROR {
-	//	code = errmsg.UserNotExist
-	//	context.JSON(http.StatusOK, gin.H{
-	//		"code": code,
-	//		"msg":  errmsg.GetErrMsg(code),
-	//		"data": nil,
-	//	})
-	//	return
-	//}
-	//context.JSON(http.StatusOK, gin.H{
-	//	"code": code,
-	//	"msg":  errmsg.GetErrMsg(code),
-	//	"data": data,
-	//	"openid":context.Keys,
-	//})
-	//id := context.Param("id")
-	//tokens := model.UseOpenidGetUid(id)
-	//if tokens.ID == 0 {
-	//	fmt.Println("不存在")
-	//} else {
-	//	fmt.Println(tokens.ID)
-	//}
 }
 
 // GetUsers 查询用户列表
