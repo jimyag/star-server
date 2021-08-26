@@ -23,6 +23,8 @@ func InitRouter() {
 		authV1.POST("student/add", v1.CreateStudent)
 		authV1.GET("schedule", v1.GetSchedule)
 		authV1.POST("schedule/add", v1.AddOneRecord)
+		authV1.POST("workform/add", v1.CreateForm)
+		authV1.PUT("workform/update/:id", v1.UpdateForm)
 	}
 	routerV1 := r.Group("api/v1")
 	{

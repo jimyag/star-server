@@ -19,7 +19,7 @@ func GetSchedule(context *gin.Context) {
 
 func AddOneRecord(context *gin.Context) {
 	var schedule model.Schedule
-	_ = context.ShouldBindJSON(schedule)
+	_ = context.ShouldBindJSON(&schedule)
 	code := model.CreateSchedule(&schedule)
 	if code == errmsg.ERROR {
 		context.JSON(http.StatusOK, gin.H{

@@ -20,6 +20,13 @@ func CreateForm(data *WorkForm) int {
 	return errmsg.SUCCESS
 }
 
-func UpdateForm(remark string) int {
-	return 1
+func UpdateForm(id int, data *WorkForm) int {
+	var form WorkForm
+	var maps = make(map[string]interface{})
+	maps["remark"] = data.Remark
+	err = db.Model(&form).Where("id=?", id).Updates(maps).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
 }
