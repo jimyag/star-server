@@ -25,7 +25,7 @@ func InitDb() {
 	// 禁用默认表的复数形式
 	db.SingularTable(true)
 	// 数据库的自动迁移
-	db.AutoMigrate(&User{}, &Notice{}, &Paper{}, &Schedule{}, &Sector{}, &Student{}, &WorkForm{}, &Tokens{})
+	db.AutoMigrate(&User{}, &Notice{}, &Article{}, &Schedule{}, &Sector{}, &Student{}, &WorkForm{}, &Authentication{})
 
 	// 设置连接池中最大的闲置连接数
 	db.DB().SetMaxIdleConns(10)

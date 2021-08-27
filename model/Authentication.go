@@ -5,14 +5,14 @@ import (
 	"star-server/utils/errmsg"
 )
 
-type Tokens struct {
+type Authentication struct {
 	gorm.Model
-	Openid string `gorm:"type:text;not null" json:"openid"`
+	Openid string `gorm:"type:char(128);not null" json:"openid"`
 	Token  string `gorm:"type:text;not null" json:"token"`
 	Uid    uint   `gorm:"type:int" json:"uid"`
 }
 
-func CreateTokens(data *Tokens) int {
+func CreateTokens(data *Authentication) int {
 	err := db.Create(&data).Error
 	if err != nil {
 		return errmsg.ERROR // 500
@@ -20,8 +20,8 @@ func CreateTokens(data *Tokens) int {
 	return errmsg.SUCCESS
 }
 
-func UseOpenidGetUid(openid string) Tokens {
-	var data Tokens
+func UseOpenidGetUid(openid string) Authentication {
+	var data Authentication
 	db.Where("openid=?", openid).Find(&data)
 	return data
 }

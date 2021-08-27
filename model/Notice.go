@@ -7,8 +7,8 @@ import (
 
 type Notice struct {
 	gorm.Model
-	Content string `gorm:"type:text" json:"content"`
-	Remark  string `gorm:"type:text" json:"remark"`
+	Content string `gorm:"type:varchar(100);" json:"content"`
+	Remark  string `gorm:"type:varchar(100)" json:"remark"`
 }
 
 func GetNotice() []Notice {

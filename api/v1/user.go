@@ -14,7 +14,7 @@ func UserExist(context *gin.Context) {
 
 }
 
-// AddUser 添加用户
+//AddUser 添加用户
 func AddUser(context *gin.Context) {
 	var code int
 	data := make(map[string]interface{}) // 响应data
@@ -77,7 +77,7 @@ func AddUser(context *gin.Context) {
 		return
 	}
 
-	tokens := model.Tokens{
+	tokens := model.Authentication{
 		Uid:    user.ID,
 		Openid: openid,
 		Token:  token,

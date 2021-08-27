@@ -8,10 +8,11 @@ import (
 type Schedule struct {
 	gorm.Model
 	SectorName  string `gorm:"type:varchar(50)" json:"sector_name"`
-	StudentId   string `gorm:"type:varchar(15)" json:"student_id"`
+	StudentId   string `gorm:"type:char(10)" json:"student_id"`
+	StudentName string `gorm:"type:varchar(40);" json:"student_name"`
 	DayOfWeek   int    `gorm:"type:int" json:"day_of_week"`
 	CourseIndex int    `gorm:"type:int" json:"course_index"`
-	Address     string `gorm:"type:" json:"address"`
+	Address     string `gorm:"type:varchar(100);" json:"address"`
 }
 
 func GetSectorSchedule(sectorName string) ([]Schedule, int) {

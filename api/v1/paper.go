@@ -28,7 +28,7 @@ func GetPaper(context *gin.Context) {
 }
 
 func CreatePaper(context *gin.Context) {
-	var paper model.Paper
+	var paper model.Article
 	_ = context.ShouldBindJSON(&paper)
 	code := model.CreatePaper(&paper)
 	if code == errmsg.ERROR {
