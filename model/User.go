@@ -47,29 +47,6 @@ func GetUser(id int) (User, int) {
 	return user, errmsg.SUCCESS
 }
 
-// EditUser 只能更新处认证之外的其他信息
-func EditUser(user *User) (code int) {
-	var data User
-	db.Model(&user).Select("authority").Find(&data)
-	user.Authority = data.Authority
-	err := db.Model(&user).Updates(user).Error
-	if err != nil {
-		return errmsg.ERROR
-	}
-	return errmsg.SUCCESS
-}
-
-// UpdateUserAuth 只允许更新认证信息
-func UpdateUserAuth(data *User) (code int) {
-	var maps = make(map[string]int)
-	maps["authority"] = data.Authority
-	err := db.Model(&data).Updates(&maps).Error
-	if err != nil {
-		return errmsg.ERROR
-	}
-	return errmsg.SUCCESS
-}
-
 // GetUsers 获得用户列表
 func GetUsers(pageSize int, pageIndex int) []User {
 	var users []User
