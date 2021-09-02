@@ -18,6 +18,12 @@ const (
 	SectorNotExist = 402
 	// StudentNotExist 学生
 	StudentNotExist = 501
+	StudentExist    = 502
+
+	// SectorKeyExist 邀请码
+	SectorKeyExist    = 601
+	SectorKeyNotExist = 602
+	SectorKeyError    = 603
 )
 
 var codeMsg = map[int]string{
@@ -33,6 +39,10 @@ var codeMsg = map[int]string{
 	SecretKeyError:           "邀请码错误",
 	SectorNotExist:           "部门不存在",
 	StudentNotExist:          "该学生不存在",
+	StudentExist:             "该学生已存在",
+	SectorKeyExist:           "邀请码已存在",
+	SectorKeyNotExist:        "邀请码不存在",
+	SectorKeyError:           "邀请码有误",
 }
 
 func GetErrMsg(code int) string {

@@ -16,6 +16,9 @@ var (
 	DbUser     string
 	DbPassWord string
 	DbName     string
+
+	AgentAppid  string
+	AgentSecret string
 )
 
 func init() {
@@ -25,7 +28,7 @@ func init() {
 	}
 	LoadServer(file)
 	LoadData(file)
-
+	LoadAgent(file)
 }
 
 func LoadServer(file *ini.File) {
@@ -41,4 +44,9 @@ func LoadData(file *ini.File) {
 	DbUser = file.Section("database").Key("DbUser").MustString("root")
 	DbPassWord = file.Section("database").Key("DbPassWord").MustString("523672645")
 	DbName = file.Section("database").Key("DbName").MustString("star")
+}
+
+func LoadAgent(file *ini.File) {
+	AgentAppid = file.Section("agent").Key("Appid  ").MustString("wx5bbeae76ae17f1da")
+	AgentSecret = file.Section("agent").Key("Secret ").MustString("2c8e552595f7ec4331661e7fde1425a1")
 }

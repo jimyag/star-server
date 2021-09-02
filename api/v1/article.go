@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func GetPaper(context *gin.Context) {
+func GetArticle(context *gin.Context) {
 	pageSize, _ := strconv.Atoi(context.Query("pageSize"))
 	pageIndex, _ := strconv.Atoi(context.Query("pageIndex"))
 	var code int
@@ -27,7 +27,7 @@ func GetPaper(context *gin.Context) {
 	})
 }
 
-func CreatePaper(context *gin.Context) {
+func CreateArticle(context *gin.Context) {
 	var paper model.Article
 	_ = context.ShouldBindJSON(&paper)
 	code := model.CreatePaper(&paper)

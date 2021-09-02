@@ -10,7 +10,17 @@ import (
 func CreateStudent(context *gin.Context) {
 	var data model.Student
 	_ = context.ShouldBindJSON(&data)
-	code := model.CreateStudent(&data)
+	_, code := model.GetStudent(data.StudentId)
+	if code == errmsg.ERROR {
+		code = errmsg.StudentExist
+		context.JSON(http.StatusOK, gin.H{
+			"code": code,
+			"msg":  errmsg.GetErrMsg(code),
+		})
+		context.Abort()
+		return
+	}
+	code = model.CreateStudent(&data)
 	if code == errmsg.ERROR {
 		context.JSON(http.StatusOK, gin.H{
 			"code": code,
@@ -26,7 +36,7 @@ func CreateStudent(context *gin.Context) {
 }
 
 func GetStudent(context *gin.Context) {
-	studentId := context.Query("studentId")
+	studentId := context.Param("student_id")
 	data, code := model.GetStudent(studentId)
 	if code == errmsg.ERROR {
 		code = errmsg.StudentNotExist

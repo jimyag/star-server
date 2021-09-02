@@ -15,24 +15,45 @@ func InitRouter() {
 	authV1.Use(middleware.JwtToken())
 	{
 		//用户模块
-		authV1.PUT("user/update/:id", v1.EditUser)
+		authV1.PUT("user/:id/update", v1.EditUser)
+		authV1.PUT("user/:id/updateauth", v1.UpdateUserAuth)
 		authV1.GET("user/:id", v1.GetUser)
+
+		// 紧急通知
 		authV1.POST("notice/add", v1.AddNotice)
-		authV1.POST("paper/add", v1.CreatePaper)
+
+		// 文章
+		authV1.POST("article/add", v1.CreateArticle)
+
+		//部门
 		authV1.POST("sector/add", v1.CreateSector)
+		authV1.POST("sector/:uid/join", v1.CreateStuSect)
+		//学生
 		authV1.POST("student/add", v1.CreateStudent)
+		authV1.GET("student/:student_id", v1.GetStudent)
+		//值班表
 		authV1.GET("schedule", v1.GetSchedule)
 		authV1.POST("schedule/add", v1.AddOneRecord)
+
+		// 工作记录
 		authV1.POST("workform/add", v1.CreateForm)
 		authV1.PUT("workform/update/:id", v1.UpdateForm)
+
+		//部门邀请码
+		authV1.POST("sectorkey/add", v1.CreateSectorKey)
+
 	}
 	routerV1 := r.Group("api/v1")
 	{
+		// 注册
 		routerV1.POST("registration", v1.AddUser)
+		// 紧急通知
 		routerV1.GET("notice", v1.GetNotice)
-		routerV1.GET("paper", v1.GetPaper)
+		//文章
+		routerV1.GET("article", v1.GetArticle)
+		// 部门
 		routerV1.GET("sector", v1.GetSector)
-		routerV1.GET("student", v1.GetStudent)
+
 	}
 
 	err := r.Run(utils.HttpPort)

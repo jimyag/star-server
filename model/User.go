@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/base64"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/scrypt"
 	"log"
@@ -68,4 +69,29 @@ func ScryptPw(passwd string) string {
 	}
 	Fpw := base64.StdEncoding.EncodeToString(HashPw)
 	return Fpw
+}
+
+// EditUser 只能更新处认证之外的其他信息
+func EditUser(user *User) (code int) {
+	var data User
+	db.Model(&user).Select("authority").Find(&data)
+	fmt.Println(user.ID)
+	fmt.Println(user.NickName)
+	user.Authority = data.Authority
+	err := db.Model(&user).Updates(&user).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
+}
+
+// UpdateUserAuth 只允许更新认证信息
+func UpdateUserAuth(data *User) (code int) {
+	var auth = make(map[string]int)
+	auth["authority"] = data.Authority
+	err := db.Model(&data).Updates(auth).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
 }
