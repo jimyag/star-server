@@ -11,7 +11,21 @@ import (
 func CreateForm(ctx *gin.Context) {
 	var data model.WorkForm
 	_ = ctx.ShouldBindJSON(&data)
-	code := model.CreateForm(&data)
+	var stuSe = model.StuSector{
+		SectorName: data.SectorName,
+		StudentId:  data.StudentId,
+	}
+	_, code := model.FindStuSector(&stuSe)
+	if code == errmsg.ERROR {
+		code = errmsg.StudentNotExist
+		ctx.JSON(http.StatusOK, gin.H{
+			"code": code,
+			"msg":  errmsg.GetErrMsg(code),
+		})
+		ctx.Abort()
+		return
+	}
+	code = model.CreateForm(&data)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  errmsg.GetErrMsg(code),

@@ -22,7 +22,7 @@ func CreateStuSect(stuSector *StuSector) (code int) {
 
 func FindStuSector(data *StuSector) (StuSector, int) {
 	var stuS StuSector
-	err := db.Model(&data).Find(&stuS).Error
+	err := db.Where("student_id=? and sector_name=?", data.StudentId, data.SectorName).Find(&stuS).Error
 	if err != nil {
 		return StuSector{}, errmsg.ERROR
 	}
