@@ -20,9 +20,9 @@ func CreateStuSect(stuSector *StuSector) (code int) {
 	return errmsg.SUCCESS
 }
 
-func FindSector(data *StuSector) (StuSector, int) {
+func FindStuSector(data *StuSector) (StuSector, int) {
 	var stuS StuSector
-	err := db.Model(&data).Find(&stuS)
+	err := db.Model(&data).Find(&stuS).Error
 	if err != nil {
 		return StuSector{}, errmsg.ERROR
 	}

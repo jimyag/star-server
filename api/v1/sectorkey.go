@@ -11,11 +11,8 @@ import (
 func CreateSectorKey(context *gin.Context) {
 	var data model.SectorKey
 	_ = context.ShouldBindJSON(&data)
-	//fmt.Println("获得部门名称")
-	//fmt.Println(data.SectorName)
 	key, e := utils.EncryptBcrypt(data.SectorName)
 	if e == errmsg.ERROR {
-		//fmt.Println("加密错误")
 		context.JSON(http.StatusOK, gin.H{
 			"code": e,
 			"msg":  errmsg.GetErrMsg(e),

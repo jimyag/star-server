@@ -29,3 +29,13 @@ func GetStudent(studentId string) (Student, int) {
 	}
 	return student, errmsg.SUCCESS
 }
+
+func MatchStuNameAndId(stu_name string, stu_id string) bool {
+	var stu Student
+	_ = db.Where("student_id=?", stu_id).Find(&stu).Error
+	if stu.StudentName == stu_name {
+		return true
+	}
+	return false
+
+}

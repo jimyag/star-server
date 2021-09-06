@@ -26,6 +26,7 @@ func AddUser(context *gin.Context) {
 	_ = context.ShouldBindJSON(&body)
 	// 在后端验证openid
 	openid, errMsg := utils.GetOpenid(body["code"])
+	// openid生成错误
 	if errMsg != "" {
 		context.JSON(http.StatusOK, gin.H{
 			"code": errmsg.ERROR,
@@ -59,16 +60,6 @@ func AddUser(context *gin.Context) {
 		return
 	}
 
-	user := model.User{
-		AvatarUrl: avatarUrl,
-		NickName:  nickName,
-		Gender:    gender,
-		Language:  language,
-		City:      city,
-		Country:   country,
-		Province:  province,
-	}
-	model.CreateUser(&user)
 	token, c := middleware.SetToken(openid)
 	// 设置token失败
 	if c == errmsg.ERROR {
@@ -80,7 +71,16 @@ func AddUser(context *gin.Context) {
 		})
 		return
 	}
-
+	user := model.User{
+		AvatarUrl: avatarUrl,
+		NickName:  nickName,
+		Gender:    gender,
+		Language:  language,
+		City:      city,
+		Country:   country,
+		Province:  province,
+	}
+	model.CreateUser(&user)
 	tokens := model.Authentication{
 		Uid:    user.ID,
 		Openid: openid,
@@ -162,9 +162,8 @@ func GetUsers(context *gin.Context) {
 // EditUser 编辑用户
 func EditUser(context *gin.Context) {
 	var user model.User
-	var id, _ = strconv.Atoi(context.Param("id"))
 	_ = context.ShouldBindJSON(&user)
-	fmt.Println(user.NickName)
+	var id, _ = strconv.Atoi(context.Param("id"))
 	user.ID = uint(id)
 	if verify.MatchIdToken(user.ID, context.Keys["openid"].(string)) {
 		// 编辑用户资料
