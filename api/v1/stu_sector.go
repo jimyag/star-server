@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"star-server/model"
@@ -29,7 +28,7 @@ func CreateStuSect(context *gin.Context) {
 
 	var stuName = maps["student_name"]
 
-	fmt.Println(stuSect.Uid)
+	//fmt.Println(stuSect.Uid)
 	// 学生和学号不匹配
 	if !model.MatchStuNameAndId(stuName, stuSect.StudentId) {
 		code = errmsg.StudentNotExist
@@ -42,6 +41,7 @@ func CreateStuSect(context *gin.Context) {
 	}
 	// 密钥不正确
 	var k, e = model.FindSectorKey(model.SectorKey{SectorName: stuSect.SectorName})
+	//fmt.Println(k.Key)
 	if e == errmsg.ERROR && k.Key != maps["sector_key"] {
 		code = errmsg.SectorKeyNotExist
 		context.JSON(http.StatusOK, gin.H{

@@ -21,8 +21,7 @@ func CreateSectKey(key *SectorKey) int {
 
 func FindSectorKey(key SectorKey) (SectorKey, int) {
 	var k SectorKey
-	err := db.Where("sector_name=?", key.SectorName).Find(&k).Error
-	//fmt.Println(k.SectorName)
+	err := db.Where("sector_name = ?", key.SectorName).Find(&k).Error
 	if err != nil {
 		return SectorKey{}, errmsg.ERROR
 	}

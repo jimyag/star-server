@@ -11,7 +11,7 @@ func CreateStudent(context *gin.Context) {
 	var data model.Student
 	_ = context.ShouldBindJSON(&data)
 	_, code := model.GetStudent(data.StudentId)
-	if code == errmsg.ERROR {
+	if code == errmsg.SUCCESS {
 		code = errmsg.StudentExist
 		context.JSON(http.StatusOK, gin.H{
 			"code": code,
