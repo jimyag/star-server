@@ -15,7 +15,7 @@ func CreateForm(ctx *gin.Context) {
 		SectorName: data.SectorName,
 		StudentId:  data.StudentId,
 	}
-	_, code := model.FindStuSector(&stuSe)
+	_, code := model.FindStuSectorUseSidSeName(&stuSe)
 	if code == errmsg.ERROR {
 		code = errmsg.StudentNotExist
 		ctx.JSON(http.StatusOK, gin.H{

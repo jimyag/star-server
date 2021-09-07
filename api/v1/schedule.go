@@ -9,7 +9,7 @@ import (
 )
 
 func GetSchedule(context *gin.Context) {
-	sectorName := context.Query("sectorName")
+	sectorName := context.Param("sector_name")
 	data, code := model.GetSectorSchedule(sectorName)
 	context.JSON(http.StatusOK, gin.H{
 		"code": code,

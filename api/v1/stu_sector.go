@@ -13,7 +13,7 @@ func CreateStuSect(context *gin.Context) {
 	var maps = make(map[string]string)
 	_ = context.ShouldBindJSON(&maps)
 	stuSect.Uid, _ = strconv.Atoi(context.Param("uid"))
-	_, code := model.FindStuSector(&stuSect)
+	_, code := model.FindStuSectorUseSidSeName(&stuSect)
 	if code == errmsg.SUCCESS {
 		code = errmsg.StudentExist
 		context.JSON(http.StatusOK, gin.H{
@@ -55,5 +55,30 @@ func CreateStuSect(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  errmsg.GetErrMsg(code),
+	})
+}
+
+func FindStuSector(context *gin.Context) {
+	var uid, _ = strconv.Atoi(context.Param("uid"))
+	var stuS, err = model.FindStuSectorUseUid(model.StuSector{Uid: uid})
+	if err == errmsg.ERROR {
+		context.JSON(http.StatusOK, gin.H{
+			"code": err,
+			"msg":  "该同学没有加入部门",
+		})
+		context.Abort()
+		return
+	}
+	var stu, _ = model.GetStudent(stuS.StudentId)
+	var data = make(map[string]interface{})
+	data["student_id"] = stu.StudentId
+	data["student_name"] = stu.StudentName
+	data["sector_name"] = stuS.SectorName
+	data["sector_key"] = nil
+	code := errmsg.SUCCESS
+	context.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  errmsg.GetErrMsg(code),
+		"data": data,
 	})
 }
