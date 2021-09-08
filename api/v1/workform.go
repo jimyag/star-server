@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"star-server/model"
@@ -42,5 +43,23 @@ func UpdateForm(ctx *gin.Context) {
 		"code": code,
 		"msg":  errmsg.GetErrMsg(code),
 	})
+}
 
+func GetStuForm(context *gin.Context) {
+	var student_id = context.Param("student_id")
+	forms, err := model.GetForm(student_id)
+	fmt.Println(err)
+	if err == errmsg.ERROR {
+		context.JSON(http.StatusOK, gin.H{
+			"code": err,
+			"msg":  errmsg.GetErrMsg(err),
+		})
+		context.Abort()
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{
+		"code": err,
+		"msg":  errmsg.GetErrMsg(err),
+		"data": forms,
+	})
 }

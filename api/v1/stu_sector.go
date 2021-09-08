@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"star-server/model"
@@ -76,6 +77,7 @@ func FindStuSector(context *gin.Context) {
 	data["sector_name"] = stuS.SectorName
 	data["sector_key"] = nil
 	code := errmsg.SUCCESS
+	fmt.Println(stuS.CreatedAt.Unix())
 	context.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  errmsg.GetErrMsg(code),

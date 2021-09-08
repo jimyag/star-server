@@ -39,6 +39,7 @@ func InitRouter() {
 		// 工作记录
 		authV1.POST("workform/add", v1.CreateForm)
 		authV1.PUT("workform/update/:id", v1.UpdateForm)
+		authV1.GET("workform/get/:student_id", v1.GetStuForm)
 		// todo 获得用户的工作情况
 
 		//部门邀请码

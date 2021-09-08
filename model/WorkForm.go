@@ -24,9 +24,18 @@ func UpdateForm(id int, data *WorkForm) int {
 	var form WorkForm
 	var maps = make(map[string]interface{})
 	maps["remark"] = data.Remark
-	err = db.Model(&form).Where("id=?", id).Updates(maps).Error
+	err := db.Model(&form).Where("id=?", id).Updates(maps).Error
 	if err != nil {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
+}
+
+func GetForm(student_id string) ([]WorkForm, int) {
+	var forms []WorkForm
+	err := db.Where("student_id=?", student_id).Find(&forms).Error
+	if err != nil {
+		return forms, errmsg.ERROR
+	}
+	return forms, errmsg.SUCCESS
 }
