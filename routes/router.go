@@ -17,9 +17,9 @@ func InitRouter() {
 	authV1.Use(middleware.JwtToken())
 	{
 		//用户模块
-		authV1.PUT("user/:id/update", v1.EditUser)
-		authV1.PUT("user/:id/updateauth", v1.UpdateUserAuth)
-		authV1.GET("user/:id", v1.GetUser)
+		authV1.PUT("user/:uid/update", v1.EditUser)
+		authV1.PUT("user/:uid/updateauth", v1.UpdateUserAuth)
+		authV1.GET("user/:uid", v1.GetUser)
 
 		// 紧急通知
 		authV1.POST("notice/add", v1.AddNotice)
@@ -40,7 +40,7 @@ func InitRouter() {
 
 		// 工作记录
 		authV1.POST("workform/add", v1.CreateForm)
-		authV1.PUT("workform/update/:id", v1.UpdateForm)
+		authV1.PUT("workform/update/:uid", v1.UpdateForm)
 		authV1.GET("workform/get/:student_id", v1.GetStuForm)
 		// todo 获得用户的工作情况
 
