@@ -8,7 +8,6 @@ import (
 	"star-server/model"
 	"star-server/utils"
 	"star-server/utils/errmsg"
-	"star-server/utils/verify"
 	"strconv"
 )
 
@@ -19,6 +18,7 @@ func UserExist(context *gin.Context) {
 
 //AddUser 添加用户
 func AddUser(context *gin.Context) {
+
 	var code int
 	data := make(map[string]interface{}) // 响应data
 	body := make(map[string]string)      // json 参数
@@ -31,11 +31,11 @@ func AddUser(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
 			"code": errmsg.ERROR,
 			"msg":  errMsg,
-			"data": nil,
 		})
 		context.Abort()
 		return
 	}
+
 	avatarUrl := body["avatarUrl"]
 	nickName := body["nickName"]
 	gender, _ := strconv.Atoi(body["gender"])
@@ -43,7 +43,15 @@ func AddUser(context *gin.Context) {
 	city := body["city"]
 	country := body["country"]
 	province := body["province"]
-	findToken := model.UseOpenidGetUid(openid)
+	findToken, err := model.UseTokenGetAuth(openid)
+	if err != errmsg.SUCCESS {
+		context.JSON(http.StatusOK, gin.H{
+			"code": err,
+			"msg":  errmsg.GetErrMsg(err),
+		})
+		context.Abort()
+		return
+	}
 
 	// 该用户已经存在
 	if findToken.ID != 0 {
@@ -60,7 +68,24 @@ func AddUser(context *gin.Context) {
 		return
 	}
 
-	token, c := middleware.SetToken(openid)
+	user := model.User{
+		AvatarUrl: avatarUrl,
+		NickName:  nickName,
+		Gender:    gender,
+		Language:  language,
+		City:      city,
+		Country:   country,
+		Province:  province,
+	}
+
+	model.CreateUser(&user)
+	token, c := middleware.SetToken(int(user.ID))
+	tokens := model.Authentication{
+		Uid:    user.ID,
+		Openid: openid,
+		Token:  token,
+	}
+
 	// 设置token失败
 	if c == errmsg.ERROR {
 		code = errmsg.TokenCreateError
@@ -71,32 +96,18 @@ func AddUser(context *gin.Context) {
 		})
 		return
 	}
-	user := model.User{
-		AvatarUrl: avatarUrl,
-		NickName:  nickName,
-		Gender:    gender,
-		Language:  language,
-		City:      city,
-		Country:   country,
-		Province:  province,
-	}
-	model.CreateUser(&user)
-	tokens := model.Authentication{
-		Uid:    user.ID,
-		Openid: openid,
-		Token:  token,
-	}
+
 	isCreate := model.CreateTokens(&tokens)
 	//创建token失败
-	if isCreate == errmsg.ERROR {
-		code = errmsg.TokenCreateError
+	if isCreate == errmsg.InsertError {
 		context.JSON(http.StatusOK, gin.H{
-			"code": code,
+			"code": isCreate,
 			"msg":  errmsg.GetErrMsg(code),
 			"data": nil,
 		})
 		return
 	}
+
 	// 最后成功
 	data["token"] = token
 	data["data"] = user
@@ -112,19 +123,30 @@ func GetUser(context *gin.Context) {
 	//使用uid和token查找该用户
 	//var code int
 
-	id, _ := strconv.Atoi(context.Param("id"))
+	// a GET request to /user/john
+	// id := c.Param("id") id == "john"
+	id, _ := strconv.Atoi(context.Param("uid"))
 	if id < 1 {
 		context.JSON(http.StatusOK, gin.H{
 			"code": errmsg.ERROR,
 			"msg":  errmsg.GetErrMsg(errmsg.ERROR),
-			"data": nil,
 		})
 		context.Abort()
 		return
 	}
-	opid := context.Keys["openid"]
-	var openid = opid.(string)
-	uToken := model.UseOpenidGetUid(openid)
+
+	uidInterface := context.Keys["uid"]
+	uid := uidInterface.(uint)
+	uToken, err := model.UseUidGetAuth(uid)
+	if err != errmsg.SUCCESS {
+		context.JSON(http.StatusOK, gin.H{
+			"code": err,
+			"msg":  errmsg.GetErrMsg(err),
+		})
+		context.Abort()
+		return
+	}
+
 	if (uint(id)) == uToken.Uid {
 		data, code := model.GetUser(id)
 		if code == errmsg.ERROR {
@@ -163,9 +185,10 @@ func GetUsers(context *gin.Context) {
 func EditUser(context *gin.Context) {
 	var user model.User
 	_ = context.ShouldBindJSON(&user)
-	var id, _ = strconv.Atoi(context.Param("id"))
+	var id, _ = strconv.Atoi(context.Param("uid"))
 	user.ID = uint(id)
-	if verify.MatchIdToken(user.ID, context.Keys["openid"].(string)) {
+	if user.ID == context.Keys["uid"].(uint) {
+		//if verify.MatchIdToken(user.ID, context.Keys["uid"].(uint)) {
 		// 编辑用户资料
 		if model.EditUser(&user) == errmsg.ERROR {
 			context.JSON(http.StatusOK, gin.H{
@@ -191,10 +214,11 @@ func EditUser(context *gin.Context) {
 func UpdateUserAuth(context *gin.Context) {
 	var user model.User
 	_ = context.ShouldBindJSON(&user)
-	var id, _ = strconv.Atoi(context.Param("id"))
+	var id, _ = strconv.Atoi(context.Param("uid"))
 	user.ID = uint(id)
 	fmt.Println(user.ID)
-	if verify.MatchIdToken(user.ID, context.Keys["openid"].(string)) {
+	if user.ID == context.Keys["uid"].(uint) {
+		//if verify.MatchIdToken(user.ID, context.Keys["openid"].(string)) {
 		if model.UpdateUserAuth(&user) == errmsg.ERROR {
 			context.JSON(http.StatusOK, gin.H{
 				"code": errmsg.ERROR,

@@ -5,7 +5,7 @@ import (
 )
 
 func MatchIdToken(id uint, openid string) bool {
-	authentication := model.UseOpenidGetUid(openid)
+	authentication, _ := model.UseOpenidGetAuth(openid)
 	if id == authentication.Uid {
 		return true
 	}

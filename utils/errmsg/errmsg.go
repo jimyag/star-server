@@ -24,25 +24,42 @@ const (
 	SectorKeyExist    = 601
 	SectorKeyNotExist = 602
 	SectorKeyError    = 603
+
+	// InsertError CreateError  数据库
+	InsertError = 701
+	UpdateError = 702
+	DeleteError = 703
+	SelectError = 704
 )
 
 var codeMsg = map[int]string{
-	SUCCESS:                  "成功",
-	ERROR:                    "失败",
-	UserAlreadyExist:         "用户已存在",
-	UserNotExist:             "用户不存在",
-	TokenError:               "Token错误",
-	TokenTimeOut:             "Token过期",
-	TokenTypeError:           "Token格式错误",
-	TokenCreateError:         "Token生成错误",
+	SUCCESS: "成功",
+	ERROR:   "失败",
+
+	UserAlreadyExist: "用户已存在",
+	UserNotExist:     "用户不存在",
+
+	TokenError:       "Token错误",
+	TokenTimeOut:     "Token过期",
+	TokenTypeError:   "Token格式错误",
+	TokenCreateError: "Token生成错误",
+
 	ParameterConstraintError: "参数格式错误",
-	SecretKeyError:           "邀请码错误",
-	SectorNotExist:           "部门不存在",
-	StudentNotExist:          "该学生不存在",
-	StudentExist:             "该学生已存在",
-	SectorKeyExist:           "邀请码已存在",
-	SectorKeyNotExist:        "邀请码不存在",
-	SectorKeyError:           "邀请码有误",
+
+	SecretKeyError: "邀请码错误",
+	SectorNotExist: "部门不存在",
+
+	StudentNotExist: "该学生不存在",
+	StudentExist:    "该学生已存在",
+
+	SectorKeyExist:    "邀请码已存在",
+	SectorKeyNotExist: "邀请码不存在",
+	SectorKeyError:    "邀请码有误",
+
+	InsertError: "插入失败",
+	UpdateError: "更新失败",
+	DeleteError: "删除失败",
+	SelectError: "查找失败",
 }
 
 func GetErrMsg(code int) string {
