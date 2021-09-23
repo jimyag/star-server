@@ -13,15 +13,16 @@ import (
 var JwyKey = []byte(utils.JwtKey)
 
 type MyClaims struct {
-	Openid string `json:"openid"`
+	Uid int `json:"uid"`
 	jwt.StandardClaims
 }
 
 // SetToken 生成token
-func SetToken(openid string) (string, int) {
+func SetToken(uid int) (string, int) {
+	// 过期时间
 	expireTime := time.Now().Add(100000 * time.Hour)
 	SetClaim := MyClaims{
-		openid,
+		uid,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "jimyag",
@@ -94,7 +95,7 @@ func JwtToken() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
-		context.Set("openid", key.Openid)
+		context.Set("uid", key.Uid)
 		context.Next()
 	}
 }
