@@ -15,13 +15,34 @@ type Authentication struct {
 func CreateTokens(data *Authentication) int {
 	err := db.Create(&data).Error
 	if err != nil {
-		return errmsg.ERROR // 500
+		return errmsg.InsertError
 	}
 	return errmsg.SUCCESS
 }
 
-func UseOpenidGetUid(openid string) Authentication {
+func UseUidGetAuth(uid uint) (Authentication, int) {
 	var data Authentication
-	db.Where("openid=?", openid).Find(&data)
-	return data
+	err := db.Where("uid=?", uid).Find(&data).Error
+	if err != nil {
+		return Authentication{}, errmsg.SelectError
+	}
+	return data, errmsg.SUCCESS
+}
+
+func UseTokenGetAuth(token string) (Authentication, int) {
+	var data Authentication
+	err := db.Where("token=?", token).Find(&data).Error
+	if err != nil {
+		return Authentication{}, errmsg.SelectError
+	}
+	return data, errmsg.SUCCESS
+}
+
+func UseOpenidGetAuth(openid string) (Authentication, int) {
+	var data Authentication
+	err := db.Where("openid=?", openid).Find(&data).Error
+	if err != nil {
+		return Authentication{}, errmsg.SelectError
+	}
+	return data, errmsg.SUCCESS
 }
