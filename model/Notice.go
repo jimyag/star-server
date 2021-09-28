@@ -11,10 +11,13 @@ type Notice struct {
 	Remark  string `gorm:"type:varchar(100)" json:"remark"`
 }
 
-func GetNotice() []Notice {
+func GetNotice() (int, []Notice) {
 	var notices []Notice
-	db.Order("created_at desc").Limit(3).Find(&notices)
-	return notices
+	err := db.Order("created_at desc").Limit(3).Find(&notices).Error
+	if err != nil {
+		return errmsg.ERROR, nil
+	}
+	return errmsg.SUCCESS, notices
 }
 
 func AddNotice(data *Notice) int {

@@ -1,65 +1,38 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"star-server/model"
+	"star-server/utils"
 	"star-server/utils/errmsg"
 	"strconv"
 )
 
-func CreateForm(ctx *gin.Context) {
+func CreateForm(context *gin.Context) {
 	var data model.WorkForm
-	_ = ctx.ShouldBindJSON(&data)
+	_ = context.ShouldBindJSON(&data)
 	var stuSe = model.StuSector{
 		SectorName: data.SectorName,
 		StudentId:  data.StudentId,
 	}
 	_, code := model.FindStuSectorUseSidSeName(&stuSe)
 	if code == errmsg.ERROR {
-		code = errmsg.StudentNotExist
-		ctx.JSON(http.StatusOK, gin.H{
-			"code": code,
-			"msg":  errmsg.GetErrMsg(code),
-		})
-		ctx.Abort()
+		utils.RequestOk(context, errmsg.StudentNotExist)
 		return
 	}
-	code = model.CreateForm(&data)
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
-		"data": data,
-	})
+	utils.RequestDataOk(context, model.CreateForm(&data), data)
 }
 
 func UpdateForm(ctx *gin.Context) {
 	var data model.WorkForm
 	id, _ := strconv.Atoi(ctx.Param("id"))
 	_ = ctx.ShouldBindJSON(&data)
-	code := model.UpdateForm(id, &data)
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
-	})
+	utils.RequestOk(ctx, model.UpdateForm(id, &data))
+
 }
 
 func GetStuForm(context *gin.Context) {
-	var student_id = context.Param("student_id")
-	forms, err := model.GetForm(student_id)
-	fmt.Println(err)
-	if err == errmsg.ERROR {
-		context.JSON(http.StatusOK, gin.H{
-			"code": err,
-			"msg":  errmsg.GetErrMsg(err),
-		})
-		context.Abort()
-		return
-	}
-	context.JSON(http.StatusOK, gin.H{
-		"code": err,
-		"msg":  errmsg.GetErrMsg(err),
-		"data": forms,
-	})
+	var studentId = context.Param("student_id")
+	forms, err := model.GetForm(studentId)
+	utils.RequestDataOk(context, err, forms)
 }

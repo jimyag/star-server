@@ -41,7 +41,7 @@ func CreateUser(data *User) (code int) {
 
 func GetUser(id int) (User, int) {
 	var user User
-	err := db.Limit(1).Where("ID = ?", id).Find(&user).Error
+	err := db.Limit(1).Where("id= ?", id).Find(&user).Error
 	if err != nil {
 		return user, errmsg.ERROR
 	}

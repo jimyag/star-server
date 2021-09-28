@@ -22,7 +22,7 @@ func InitRouter() {
 		authV1.GET("user/:uid", v1.GetUser)
 
 		// 紧急通知
-		authV1.POST("notice/add", v1.AddNotice)
+		authV1.POST("notice/add", v1.CreateNotice)
 
 		// 文章
 		authV1.POST("article/add", v1.CreateArticle)

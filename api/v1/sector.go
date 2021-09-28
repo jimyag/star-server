@@ -2,8 +2,8 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"star-server/model"
+	"star-server/utils"
 	"star-server/utils/errmsg"
 	"strconv"
 )
@@ -18,11 +18,7 @@ func GetSector(context *gin.Context) {
 		pageSize = -1
 	}
 	data, code := model.GetSector(pageSize, pageIndex)
-	context.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
-		"data": data,
-	})
+	utils.RequestDataOk(context, code, data)
 }
 
 func CreateSector(context *gin.Context) {
@@ -30,17 +26,8 @@ func CreateSector(context *gin.Context) {
 	_ = context.ShouldBindJSON(&data)
 	code := model.CreateSector(&data)
 	if code == errmsg.ERROR {
-		context.JSON(http.StatusOK, gin.H{
-			"code": code,
-			"msg":  errmsg.GetErrMsg(code),
-			"data": nil,
-		})
-		context.Abort()
+		utils.RequestOk(context, code)
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
-		"data": data,
-	})
+	utils.RequestDataOk(context, code, data)
 }

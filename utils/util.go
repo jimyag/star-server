@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"io/ioutil"
 	"net/http"
@@ -41,4 +42,38 @@ func PsdMatch(hashPwd string, plainPwd string) bool {
 	bytePlain := []byte(plainPwd)
 	err := bcrypt.CompareHashAndPassword(byteHash, bytePlain)
 	return err == nil
+}
+
+func RequestJson(context *gin.Context, statusCode int, code int, msg string, data interface{}) {
+	if data != nil {
+		context.JSON(statusCode, gin.H{
+			"code": code,
+			"msg":  msg,
+			"data": data,
+		})
+		context.Abort()
+	} else {
+		context.JSON(statusCode, gin.H{
+			"code": code,
+			"msg":  msg,
+		})
+		context.Abort()
+	}
+
+}
+
+func RequestOk(context *gin.Context, code int) {
+	RequestJson(context, http.StatusOK, code, errmsg.GetErrMsg(code), nil)
+}
+
+func RequestMsgOk(context *gin.Context, code int, msg string) {
+	RequestJson(context, http.StatusOK, code, msg, nil)
+}
+
+func RequestDataOk(context *gin.Context, code int, data interface{}) {
+	RequestJson(context, http.StatusOK, code, errmsg.GetErrMsg(code), data)
+}
+
+func RequestMsgDataOk(context *gin.Context, code int, msg string, data interface{}) {
+	RequestJson(context, http.StatusOK, code, msg, data)
 }

@@ -9,4 +9,5 @@ func main() {
 	model.InitDb()
 
 	routes.InitRouter()
+
 }

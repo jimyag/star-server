@@ -2,8 +2,8 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"star-server/model"
+	"star-server/utils"
 	"star-server/utils/errmsg"
 	"strconv"
 )
@@ -11,7 +11,6 @@ import (
 func GetArticle(context *gin.Context) {
 	pageSize, _ := strconv.Atoi(context.Query("pageSize"))
 	pageIndex, _ := strconv.Atoi(context.Query("pageIndex"))
-	var code int
 	if pageIndex == 0 {
 		pageIndex = -1
 	}
@@ -19,12 +18,7 @@ func GetArticle(context *gin.Context) {
 		pageSize = -1
 	}
 	data, code := model.GetPaper(pageSize, pageIndex)
-
-	context.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
-		"data": data,
-	})
+	utils.RequestDataOk(context, code, data)
 }
 
 func CreateArticle(context *gin.Context) {
@@ -32,17 +26,8 @@ func CreateArticle(context *gin.Context) {
 	_ = context.ShouldBindJSON(&paper)
 	code := model.CreatePaper(&paper)
 	if code == errmsg.ERROR {
-		context.JSON(http.StatusOK, gin.H{
-			"code": code,
-			"msg":  errmsg.GetErrMsg(code),
-			"data": nil,
-		})
-		context.Abort()
+		utils.RequestOk(context, code)
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errmsg.GetErrMsg(code),
-		"data": paper,
-	})
+	utils.RequestDataOk(context, code, paper)
 }

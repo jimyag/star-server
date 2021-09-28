@@ -53,46 +53,34 @@ func CheckToken(token string) (*MyClaims, int) {
 func JwtToken() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		tokenHerder := context.Request.Header.Get("Authorization")
-		code := errmsg.SUCCESS
+
+		contextJson := func(code int) {
+			context.JSON(http.StatusOK, gin.H{
+				"code": code,
+				"msg":  errmsg.GetErrMsg(code),
+			})
+			context.Abort()
+		}
 		if tokenHerder == "" {
 			//不存在
-			code = errmsg.TokenError
-			context.JSON(http.StatusOK, gin.H{
-				"code": code,
-				"msg":  errmsg.GetErrMsg(code),
-			})
-			context.Abort()
+			contextJson(errmsg.TokenError)
 			return
-
 		}
+
 		checkToken := strings.SplitN(tokenHerder, " ", 2)
 		if len(checkToken) != 2 && checkToken[0] != "Bearer" {
-			code = errmsg.TokenTypeError
-			context.JSON(http.StatusOK, gin.H{
-				"code": code,
-				"msg":  errmsg.GetErrMsg(code),
-			})
-			context.Abort()
+			contextJson(errmsg.TokenTypeError)
 			return
 		}
+
 		key, tCode := CheckToken(checkToken[1])
 		if tCode == errmsg.ERROR {
-			code = errmsg.TokenError
-			context.JSON(http.StatusOK, gin.H{
-				"code": code,
-				"msg":  errmsg.GetErrMsg(code),
-			})
-			context.Abort()
+			contextJson(errmsg.TokenError)
 			return
 		}
 
 		if time.Now().Unix() > key.ExpiresAt {
-			code = errmsg.TokenTimeOut
-			context.JSON(http.StatusOK, gin.H{
-				"code": code,
-				"msg":  errmsg.GetErrMsg(code),
-			})
-			context.Abort()
+			contextJson(errmsg.TokenTimeOut)
 			return
 		}
 		context.Set("uid", key.Uid)

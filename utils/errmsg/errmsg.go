@@ -14,8 +14,9 @@ const (
 	// ParameterConstraintError 参数
 	ParameterConstraintError = 301
 	// SecretKeyError 部门
-	SecretKeyError = 401
-	SectorNotExist = 402
+	SecretKeyError        = 401
+	SectorNotExist        = 402
+	SectorAddressNotExist = 403
 	// StudentNotExist 学生
 	StudentNotExist = 501
 	StudentExist    = 502
@@ -46,8 +47,9 @@ var codeMsg = map[int]string{
 
 	ParameterConstraintError: "参数格式错误",
 
-	SecretKeyError: "邀请码错误",
-	SectorNotExist: "部门不存在",
+	SecretKeyError:        "邀请码错误",
+	SectorNotExist:        "部门不存在",
+	SectorAddressNotExist: "部门地址不存在",
 
 	StudentNotExist: "该学生不存在",
 	StudentExist:    "该学生已存在",
