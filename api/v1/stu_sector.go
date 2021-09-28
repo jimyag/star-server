@@ -15,7 +15,7 @@ func CreateStuSect(context *gin.Context) {
 	stuSect.Uid, _ = strconv.Atoi(context.Param("uid"))
 	_, code := model.FindStuSectorUseSidSeName(&stuSect)
 	if code == errmsg.SUCCESS {
-		utils.RequestOk(context, errmsg.StudentExist)
+		utils.ResponseOk(context, errmsg.StudentExist)
 		return
 	}
 	stuSect.StudentId = maps["student_id"]
@@ -26,24 +26,24 @@ func CreateStuSect(context *gin.Context) {
 	//fmt.Println(stuSect.Uid)
 	// 学生和学号不匹配
 	if !model.MatchStuNameAndId(stuName, stuSect.StudentId) {
-		utils.RequestOk(context, errmsg.StudentNotExist)
+		utils.ResponseOk(context, errmsg.StudentNotExist)
 		return
 	}
 	// 密钥不正确
 	var k, e = model.FindSectorKey(model.SectorKey{SectorName: stuSect.SectorName})
 	//fmt.Println(k.Key)
 	if e == errmsg.ERROR && k.Key != maps["sector_key"] {
-		utils.RequestOk(context, errmsg.SectorKeyNotExist)
+		utils.ResponseOk(context, errmsg.SectorKeyNotExist)
 		return
 	}
-	utils.RequestOk(context, model.CreateStuSect(&stuSect))
+	utils.ResponseOk(context, model.CreateStuSect(&stuSect))
 }
 
 func FindStuSector(context *gin.Context) {
 	var uid, _ = strconv.Atoi(context.Param("uid"))
 	var stuS, err = model.FindStuSectorUseUid(model.StuSector{Uid: uid})
 	if err == errmsg.ERROR {
-		utils.RequestMsgOk(context, err, "该同学没有加入部门")
+		utils.ResponseMsgOk(context, err, "该同学没有加入部门")
 		return
 	}
 	var stu, _ = model.GetStudent(stuS.StudentId)
@@ -52,6 +52,6 @@ func FindStuSector(context *gin.Context) {
 	data["student_name"] = stu.StudentName
 	data["sector_name"] = stuS.SectorName
 	data["sector_key"] = nil
-	utils.RequestDataOk(context, errmsg.SUCCESS, data)
+	utils.ResponseDataOk(context, errmsg.SUCCESS, data)
 
 }

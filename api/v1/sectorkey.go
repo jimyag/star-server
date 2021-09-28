@@ -12,14 +12,14 @@ func CreateSectorKey(context *gin.Context) {
 	_ = context.ShouldBindJSON(&data)
 	key, err := utils.EncryptBcrypt(data.SectorName)
 	if err == errmsg.ERROR {
-		utils.RequestOk(context, err)
+		utils.ResponseOk(context, err)
 		return
 	}
 	data.Key = key
 	_, code := model.FindSectorKey(data)
 	if code == errmsg.SUCCESS {
-		utils.RequestOk(context, errmsg.SectorKeyExist)
+		utils.ResponseOk(context, errmsg.SectorKeyExist)
 		return
 	}
-	utils.RequestOk(context, model.CreateSectKey(&data))
+	utils.ResponseOk(context, model.CreateSectKey(&data))
 }

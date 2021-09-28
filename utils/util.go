@@ -44,7 +44,7 @@ func PsdMatch(hashPwd string, plainPwd string) bool {
 	return err == nil
 }
 
-func RequestJson(context *gin.Context, statusCode int, code int, msg string, data interface{}) {
+func ResponseJson(context *gin.Context, statusCode int, code int, msg string, data interface{}) {
 	if data != nil {
 		context.JSON(statusCode, gin.H{
 			"code": code,
@@ -62,18 +62,18 @@ func RequestJson(context *gin.Context, statusCode int, code int, msg string, dat
 
 }
 
-func RequestOk(context *gin.Context, code int) {
-	RequestJson(context, http.StatusOK, code, errmsg.GetErrMsg(code), nil)
+func ResponseOk(context *gin.Context, code int) {
+	ResponseJson(context, http.StatusOK, code, errmsg.GetErrMsg(code), nil)
 }
 
-func RequestMsgOk(context *gin.Context, code int, msg string) {
-	RequestJson(context, http.StatusOK, code, msg, nil)
+func ResponseMsgOk(context *gin.Context, code int, msg string) {
+	ResponseJson(context, http.StatusOK, code, msg, nil)
 }
 
-func RequestDataOk(context *gin.Context, code int, data interface{}) {
-	RequestJson(context, http.StatusOK, code, errmsg.GetErrMsg(code), data)
+func ResponseDataOk(context *gin.Context, code int, data interface{}) {
+	ResponseJson(context, http.StatusOK, code, errmsg.GetErrMsg(code), data)
 }
 
-func RequestMsgDataOk(context *gin.Context, code int, msg string, data interface{}) {
-	RequestJson(context, http.StatusOK, code, msg, data)
+func ResponseMsgDataOk(context *gin.Context, code int, msg string, data interface{}) {
+	ResponseJson(context, http.StatusOK, code, msg, data)
 }

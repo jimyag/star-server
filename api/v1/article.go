@@ -18,7 +18,7 @@ func GetArticle(context *gin.Context) {
 		pageSize = -1
 	}
 	data, code := model.GetPaper(pageSize, pageIndex)
-	utils.RequestDataOk(context, code, data)
+	utils.ResponseDataOk(context, code, data)
 }
 
 func CreateArticle(context *gin.Context) {
@@ -26,8 +26,8 @@ func CreateArticle(context *gin.Context) {
 	_ = context.ShouldBindJSON(&paper)
 	code := model.CreatePaper(&paper)
 	if code == errmsg.ERROR {
-		utils.RequestOk(context, code)
+		utils.ResponseOk(context, code)
 		return
 	}
-	utils.RequestDataOk(context, code, paper)
+	utils.ResponseDataOk(context, code, paper)
 }

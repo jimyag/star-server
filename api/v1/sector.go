@@ -18,7 +18,7 @@ func GetSector(context *gin.Context) {
 		pageSize = -1
 	}
 	data, code := model.GetSector(pageSize, pageIndex)
-	utils.RequestDataOk(context, code, data)
+	utils.ResponseDataOk(context, code, data)
 }
 
 func CreateSector(context *gin.Context) {
@@ -26,8 +26,8 @@ func CreateSector(context *gin.Context) {
 	_ = context.ShouldBindJSON(&data)
 	code := model.CreateSector(&data)
 	if code == errmsg.ERROR {
-		utils.RequestOk(context, code)
+		utils.ResponseOk(context, code)
 		return
 	}
-	utils.RequestDataOk(context, code, data)
+	utils.ResponseDataOk(context, code, data)
 }

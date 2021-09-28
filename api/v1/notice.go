@@ -12,13 +12,13 @@ func CreateNotice(context *gin.Context) {
 	_ = context.ShouldBindJSON(&notice)
 	err := model.AddNotice(&notice)
 	if err == errmsg.ERROR {
-		utils.RequestOk(context, err)
+		utils.ResponseOk(context, err)
 		return
 	}
-	utils.RequestDataOk(context, err, notice)
+	utils.ResponseDataOk(context, err, notice)
 }
 
 func GetNotice(context *gin.Context) {
 	err, notices := model.GetNotice()
-	utils.RequestDataOk(context, err, notices)
+	utils.ResponseDataOk(context, err, notices)
 }

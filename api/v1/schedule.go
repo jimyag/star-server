@@ -10,7 +10,7 @@ import (
 func GetSchedule(context *gin.Context) {
 	sectorName := context.Param("sector_name")
 	data, code := model.GetSectorSchedule(sectorName)
-	utils.RequestDataOk(context, code, data)
+	utils.ResponseDataOk(context, code, data)
 }
 
 func AddOneRecord(context *gin.Context) {
@@ -19,29 +19,29 @@ func AddOneRecord(context *gin.Context) {
 	var code int
 	// 验证学号和姓名是否正确
 	if !model.MatchStuNameAndId(schedule.StudentName, schedule.StudentId) {
-		utils.RequestOk(context, errmsg.StudentNotExist)
+		utils.ResponseOk(context, errmsg.StudentNotExist)
 		return
 	}
 	// 验证是否有这个部门
 	sector, code := model.UseNameGetSector(schedule.SectorName)
 	if code == errmsg.ERROR {
-		utils.RequestOk(context, errmsg.SectorNotExist)
+		utils.ResponseOk(context, errmsg.SectorNotExist)
 		return
 	}
 	// 验证地点是否正确
 	if sector.Address != schedule.Address {
-		utils.RequestOk(context, errmsg.SectorAddressNotExist)
+		utils.ResponseOk(context, errmsg.SectorAddressNotExist)
 		return
 	}
 	if schedule.DayOfWeek > 5 || schedule.DayOfWeek < 1 || schedule.CourseIndex < 1 || schedule.CourseIndex > 4 {
-		utils.RequestMsgOk(context, errmsg.ERROR, "time error")
+		utils.ResponseMsgOk(context, errmsg.ERROR, "time error")
 		return
 	}
 	// 创建一条记录
 	code = model.CreateSchedule(&schedule)
 	if code == errmsg.ERROR {
-		utils.RequestOk(context, code)
+		utils.ResponseOk(context, code)
 		return
 	}
-	utils.RequestDataOk(context, code, schedule)
+	utils.ResponseDataOk(context, code, schedule)
 }

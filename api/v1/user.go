@@ -27,7 +27,7 @@ func AddUser(context *gin.Context) {
 	openid, errMsg := utils.GetOpenid(body["code"])
 	// openid生成错误
 	if errMsg != "" {
-		utils.RequestOk(context, errmsg.ERROR)
+		utils.ResponseOk(context, errmsg.ERROR)
 		return
 	}
 
@@ -40,7 +40,7 @@ func AddUser(context *gin.Context) {
 	province := body["province"]
 	findToken, err := model.UseTokenGetAuth(openid)
 	if err != errmsg.SUCCESS {
-		utils.RequestOk(context, err)
+		utils.ResponseOk(context, err)
 		return
 	}
 
@@ -49,7 +49,7 @@ func AddUser(context *gin.Context) {
 		user, _ := model.GetUser(int(findToken.Uid))
 		data["token"] = findToken.Token
 		data["data"] = user
-		utils.RequestDataOk(context, errmsg.UserAlreadyExist, data)
+		utils.ResponseDataOk(context, errmsg.UserAlreadyExist, data)
 		return
 	}
 
@@ -73,21 +73,21 @@ func AddUser(context *gin.Context) {
 
 	// 设置token失败
 	if c == errmsg.ERROR {
-		utils.RequestOk(context, errmsg.TokenCreateError)
+		utils.ResponseOk(context, errmsg.TokenCreateError)
 		return
 	}
 
 	isCreate := model.CreateTokens(&tokens)
 	//创建token失败
 	if isCreate == errmsg.InsertError {
-		utils.RequestOk(context, isCreate)
+		utils.ResponseOk(context, isCreate)
 		return
 	}
 
 	// 最后成功
 	data["token"] = token
 	data["data"] = user
-	utils.RequestDataOk(context, code, data)
+	utils.ResponseDataOk(context, code, data)
 }
 
 // GetUser 查询单个用户
@@ -100,7 +100,7 @@ func GetUser(context *gin.Context) {
 	// id := c.Param("id") id == "john"
 	id, _ := strconv.Atoi(context.Param("uid"))
 	if id < 1 {
-		utils.RequestOk(context, errmsg.ERROR)
+		utils.ResponseOk(context, errmsg.ERROR)
 		return
 	}
 
@@ -108,20 +108,20 @@ func GetUser(context *gin.Context) {
 	uid := uidInterface.(int)
 	uToken, err := model.UseUidGetAuth(uint(uid))
 	if err != errmsg.SUCCESS {
-		utils.RequestOk(context, err)
+		utils.ResponseOk(context, err)
 		return
 	}
 
 	if (uint(id)) == uToken.Uid {
 		data, code := model.GetUser(id)
 		if code == errmsg.ERROR {
-			utils.RequestOk(context, errmsg.UserNotExist)
+			utils.ResponseOk(context, errmsg.UserNotExist)
 			return
 		}
-		utils.RequestDataOk(context, code, data)
+		utils.ResponseDataOk(context, code, data)
 		return
 	} else {
-		utils.RequestOk(context, errmsg.UserNotExist)
+		utils.ResponseOk(context, errmsg.UserNotExist)
 	}
 }
 
@@ -170,17 +170,17 @@ func UpdateUserAuth(context *gin.Context) {
 	if user.ID == context.Keys["uid"].(uint) {
 		//if verify.MatchIdToken(user.ID, context.Keys["openid"].(string)) {
 		if model.UpdateUserAuth(&user) == errmsg.ERROR {
-			utils.RequestOk(context, errmsg.ERROR)
+			utils.ResponseOk(context, errmsg.ERROR)
 			return
 		}
 
-		utils.RequestOk(context, errmsg.SUCCESS)
+		utils.ResponseOk(context, errmsg.SUCCESS)
 
 	} else {
 		context.JSON(http.StatusOK, gin.H{
 			"code": errmsg.UserNotExist,
 			"msg":  errmsg.GetErrMsg(errmsg.UserNotExist),
 		})
-		utils.RequestOk(context, errmsg.UserNotExist)
+		utils.ResponseOk(context, errmsg.UserNotExist)
 	}
 }

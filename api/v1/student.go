@@ -12,16 +12,16 @@ func CreateStudent(context *gin.Context) {
 	_ = context.ShouldBindJSON(&data)
 	_, code := model.GetStudent(data.StudentId)
 	if code == errmsg.SUCCESS {
-		utils.RequestOk(context, code)
+		utils.ResponseOk(context, code)
 		return
 	}
 	code = model.CreateStudent(&data)
-	utils.RequestDataOk(context, code, data)
+	utils.ResponseDataOk(context, code, data)
 }
 
 func GetStudent(context *gin.Context) {
 	studentId := context.Param("student_id")
 	data, code := model.GetStudent(studentId)
-	utils.RequestDataOk(context, code, data)
+	utils.ResponseDataOk(context, code, data)
 
 }
