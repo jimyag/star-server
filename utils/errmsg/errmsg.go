@@ -9,8 +9,9 @@ const (
 	// TokenError token相关
 	TokenError       = 201
 	TokenTimeOut     = 202
-	TokenTypeError   = 203
+	TokenFormatError = 203
 	TokenCreateError = 204
+	TokenNotExist    = 205
 	// ParameterConstraintError 参数
 	ParameterConstraintError = 301
 	// SecretKeyError 部门
@@ -42,8 +43,9 @@ var codeMsg = map[int]string{
 
 	TokenError:       "Token错误",
 	TokenTimeOut:     "Token过期",
-	TokenTypeError:   "Token格式错误",
+	TokenFormatError: "Token格式错误",
 	TokenCreateError: "Token生成错误",
+	TokenNotExist:    "Token不存在",
 
 	ParameterConstraintError: "参数格式错误",
 

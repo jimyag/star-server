@@ -10,6 +10,7 @@ import (
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
 	r := gin.New()
+	//使用自己的log
 	r.Use(middleware.Logger())
 	r.Use(gin.Recovery())
 

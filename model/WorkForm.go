@@ -31,9 +31,9 @@ func UpdateForm(id int, data *WorkForm) int {
 	return errmsg.SUCCESS
 }
 
-func GetForm(student_id string) ([]WorkForm, int) {
+func GetForm(studentId string) ([]WorkForm, int) {
 	var forms []WorkForm
-	err := db.Where("student_id=?", student_id).Find(&forms).Error
+	err := db.Where("student_id=?", studentId).Find(&forms).Error
 	if err != nil {
 		return forms, errmsg.ERROR
 	}

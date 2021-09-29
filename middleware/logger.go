@@ -24,7 +24,8 @@ func Logger() gin.HandlerFunc {
 	logger.SetLevel(logrus.DebugLevel)
 	logWriter, _ := retalog.New(
 		filePath+"%Y%m%d.log",
-		retalog.WithMaxAge(7*24*time.Hour),
+		retalog.WithMaxAge(12*30*24*time.Hour),
+		//24小时分割一次
 		retalog.WithRotationTime(24*time.Hour),
 		retalog.WithLinkName(linkName),
 	)
@@ -42,7 +43,9 @@ func Logger() gin.HandlerFunc {
 	logger.AddHook(Hook)
 	return func(context *gin.Context) {
 		startTime := time.Now()
+		// 洋葱模型
 		context.Next()
+		// 从开始到结束的时间
 		stopTime := time.Since(startTime)
 		spendTime := fmt.Sprintf("%d ms", int(math.Ceil(float64(stopTime.Nanoseconds())/1000000.0)))
 		hostName, err := os.Hostname()
@@ -68,6 +71,7 @@ func Logger() gin.HandlerFunc {
 			"DataSize":  dataSize,
 			"Agent":     userAgent,
 		})
+		//记录系统内部的错误
 		if len(context.Errors) > 0 {
 			entry.Error(context.Errors.ByType(gin.ErrorTypePrivate).String())
 		}
@@ -78,6 +82,5 @@ func Logger() gin.HandlerFunc {
 		} else {
 			entry.Info()
 		}
-
 	}
 }

@@ -10,11 +10,6 @@ import (
 	"strconv"
 )
 
-// UserExist 用户是否存在
-func UserExist(context *gin.Context) {
-
-}
-
 //AddUser 添加用户
 func AddUser(context *gin.Context) {
 
@@ -30,7 +25,6 @@ func AddUser(context *gin.Context) {
 		utils.ResponseOk(context, errmsg.ERROR)
 		return
 	}
-
 	avatarUrl := body["avatarUrl"]
 	nickName := body["nickName"]
 	gender, _ := strconv.Atoi(body["gender"])
@@ -125,11 +119,6 @@ func GetUser(context *gin.Context) {
 	}
 }
 
-// GetUsers 查询用户列表
-func GetUsers(context *gin.Context) {
-
-}
-
 // EditUser 编辑用户
 func EditUser(context *gin.Context) {
 
@@ -138,7 +127,6 @@ func EditUser(context *gin.Context) {
 	var id, _ = strconv.Atoi(context.Param("uid"))
 	user.ID = uint(id)
 	if user.ID == context.Keys["uid"].(uint) {
-		//if verify.MatchIdToken(user.ID, context.Keys["uid"].(uint)) {
 		// 编辑用户资料
 		if model.EditUser(&user) == errmsg.ERROR {
 			context.JSON(http.StatusOK, gin.H{
@@ -168,7 +156,6 @@ func UpdateUserAuth(context *gin.Context) {
 	user.ID = uint(id)
 	//fmt.Println(user.ID)
 	if user.ID == context.Keys["uid"].(uint) {
-		//if verify.MatchIdToken(user.ID, context.Keys["openid"].(string)) {
 		if model.UpdateUserAuth(&user) == errmsg.ERROR {
 			utils.ResponseOk(context, errmsg.ERROR)
 			return
