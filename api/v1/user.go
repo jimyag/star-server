@@ -1,8 +1,8 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"star-server/middleware"
 	"star-server/model"
 	"star-server/utils"
@@ -22,7 +22,7 @@ func AddUser(context *gin.Context) {
 	openid, errMsg := utils.GetOpenid(body["code"])
 	// openid生成错误
 	if errMsg != "" {
-		utils.ResponseOk(context, errmsg.ERROR)
+		utils.ResponseMsgOk(context, errmsg.ERROR, errMsg)
 		return
 	}
 	avatarUrl := body["avatarUrl"]
@@ -32,11 +32,7 @@ func AddUser(context *gin.Context) {
 	city := body["city"]
 	country := body["country"]
 	province := body["province"]
-	findToken, err := model.UseTokenGetAuth(openid)
-	if err != errmsg.SUCCESS {
-		utils.ResponseOk(context, err)
-		return
-	}
+	findToken, _ := model.UseTokenGetAuth(openid)
 
 	// 该用户已经存在
 	if findToken.ID != 0 {
@@ -87,22 +83,15 @@ func AddUser(context *gin.Context) {
 // GetUser 查询单个用户
 func GetUser(context *gin.Context) {
 
-	//使用uid和token查找该用户
-	//var code int
-
-	// a GET request to /user/john
-	// id := c.Param("id") id == "john"
 	id, _ := strconv.Atoi(context.Param("uid"))
 	if id < 1 {
 		utils.ResponseOk(context, errmsg.ERROR)
 		return
 	}
-
-	uidInterface := context.Keys["uid"]
-	uid := uidInterface.(int)
-	uToken, err := model.UseUidGetAuth(uint(uid))
+	uid := context.Keys["uid"]
+	uToken, err := model.UseUidGetAuth(uint(uid.(int)))
 	if err != errmsg.SUCCESS {
-		utils.ResponseOk(context, err)
+		utils.ResponseOk(context, errmsg.UserNotExist)
 		return
 	}
 
@@ -119,33 +108,27 @@ func GetUser(context *gin.Context) {
 	}
 }
 
-// EditUser 编辑用户
-func EditUser(context *gin.Context) {
+// UpdateUser 编辑用户
+func UpdateUser(context *gin.Context) {
 
 	var user model.User
 	_ = context.ShouldBindJSON(&user)
 	var id, _ = strconv.Atoi(context.Param("uid"))
 	user.ID = uint(id)
-	if user.ID == context.Keys["uid"].(uint) {
+
+	uid := context.Keys["uid"]
+	fmt.Println(uid, user.ID)
+	if int(user.ID) == uid {
 		// 编辑用户资料
 		if model.EditUser(&user) == errmsg.ERROR {
-			context.JSON(http.StatusOK, gin.H{
-				"code": errmsg.ERROR,
-				"msg":  errmsg.GetErrMsg(errmsg.ERROR),
-			})
-			context.Abort()
+			utils.ResponseOk(context, errmsg.UpdateError)
 			return
 		}
-		context.JSON(http.StatusOK, gin.H{
-			"code": errmsg.SUCCESS,
-			"msg":  errmsg.GetErrMsg(errmsg.SUCCESS),
-		})
-		//	id 和 openid不匹配
+		newUser, _ := model.GetUser(int(user.ID))
+		utils.ResponseDataOk(context, errmsg.SUCCESS, newUser)
 	} else {
-		context.JSON(http.StatusOK, gin.H{
-			"code": errmsg.UserNotExist,
-			"msg":  errmsg.GetErrMsg(errmsg.UserNotExist),
-		})
+		//	id 和 openid不匹配
+		utils.ResponseOk(context, errmsg.UserNotExist)
 	}
 }
 
@@ -153,21 +136,17 @@ func UpdateUserAuth(context *gin.Context) {
 	var user model.User
 	_ = context.ShouldBindJSON(&user)
 	var id, _ = strconv.Atoi(context.Param("uid"))
+	fmt.Println(user.ID)
 	user.ID = uint(id)
-	//fmt.Println(user.ID)
-	if user.ID == context.Keys["uid"].(uint) {
+
+	if id == context.Keys["uid"] {
 		if model.UpdateUserAuth(&user) == errmsg.ERROR {
 			utils.ResponseOk(context, errmsg.ERROR)
 			return
 		}
-
-		utils.ResponseOk(context, errmsg.SUCCESS)
-
+		newUser, _ := model.GetUser(id)
+		utils.ResponseDataOk(context, errmsg.SUCCESS, newUser)
 	} else {
-		context.JSON(http.StatusOK, gin.H{
-			"code": errmsg.UserNotExist,
-			"msg":  errmsg.GetErrMsg(errmsg.UserNotExist),
-		})
 		utils.ResponseOk(context, errmsg.UserNotExist)
 	}
 }

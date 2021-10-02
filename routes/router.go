@@ -18,7 +18,7 @@ func InitRouter() {
 	authV1.Use(middleware.JwtToken())
 	{
 		//用户模块
-		authV1.PUT("user/:uid/update", v1.EditUser)
+		authV1.PUT("user/:uid/update", v1.UpdateUser)
 		authV1.PUT("user/:uid/updateauth", v1.UpdateUserAuth)
 		authV1.GET("user/:uid", v1.GetUser)
 

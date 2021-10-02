@@ -56,6 +56,7 @@ func Logger() gin.HandlerFunc {
 		clientIp := context.ClientIP()
 		userAgent := context.Request.UserAgent()
 		dataSize := context.Writer.Size()
+		//body, _ := ioutil.ReadAll(context.Request.Body)
 		if dataSize < 0 {
 			dataSize = 0
 		}
