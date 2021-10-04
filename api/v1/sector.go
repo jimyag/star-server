@@ -24,6 +24,10 @@ func GetSector(context *gin.Context) {
 func CreateSector(context *gin.Context) {
 	var data model.Sector
 	_ = context.ShouldBindJSON(&data)
+	if data.SectorName == "" || data.SectorInformation == "" || data.Address == "" || data.Phone == "" || data.Supervisor == "" {
+		utils.ResponseOk(context, errmsg.ParameterError)
+		return
+	}
 	code := model.CreateSector(&data)
 	if code == errmsg.ERROR {
 		utils.ResponseOk(context, code)
