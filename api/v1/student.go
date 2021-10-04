@@ -10,9 +10,13 @@ import (
 func CreateStudent(context *gin.Context) {
 	var data model.Student
 	_ = context.ShouldBindJSON(&data)
+	if data.StudentId == "" || data.StudentName == "" {
+		utils.ResponseOk(context, errmsg.ParameterError)
+		return
+	}
 	_, code := model.GetStudent(data.StudentId)
 	if code == errmsg.SUCCESS {
-		utils.ResponseOk(context, code)
+		utils.ResponseOk(context, errmsg.StudentExist)
 		return
 	}
 	code = model.CreateStudent(&data)
@@ -22,6 +26,9 @@ func CreateStudent(context *gin.Context) {
 func GetStudent(context *gin.Context) {
 	studentId := context.Param("student_id")
 	data, code := model.GetStudent(studentId)
+	if code == errmsg.ERROR {
+		utils.ResponseOk(context, errmsg.StudentNotExist)
+		return
+	}
 	utils.ResponseDataOk(context, code, data)
-
 }
