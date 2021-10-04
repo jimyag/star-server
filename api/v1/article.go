@@ -11,6 +11,10 @@ import (
 func GetArticle(context *gin.Context) {
 	pageSize, _ := strconv.Atoi(context.Query("pageSize"))
 	pageIndex, _ := strconv.Atoi(context.Query("pageIndex"))
+	if pageIndex < 0 || pageSize < 0 {
+		utils.ResponseOk(context, errmsg.ParameterError)
+		return
+	}
 	if pageIndex == 0 {
 		pageIndex = -1
 	}
@@ -24,6 +28,11 @@ func GetArticle(context *gin.Context) {
 func CreateArticle(context *gin.Context) {
 	var paper model.Article
 	_ = context.ShouldBindJSON(&paper)
+	if paper.Title == "" || paper.Content == "" {
+		utils.ResponseOk(context, errmsg.ParameterError)
+		return
+	}
+
 	code := model.CreatePaper(&paper)
 	if code == errmsg.ERROR {
 		utils.ResponseOk(context, code)
