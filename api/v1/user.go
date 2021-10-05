@@ -10,74 +10,81 @@ import (
 	"strconv"
 )
 
+type addUser struct {
+	model.User
+	Code string `json:"code"`
+}
+
 //AddUser 添加用户
 func AddUser(context *gin.Context) {
 
-	var code int
-	data := make(map[string]interface{}) // 响应data
-	body := make(map[string]string)      // json 参数
-
+	// 绑定前端发过来的json
+	var body addUser
 	_ = context.ShouldBindJSON(&body)
+
 	// 在后端验证openid
-	openid, errMsg := utils.GetOpenid(body["code"])
+	openid, errMsg := utils.GetOpenid(body.Code)
+
 	// openid生成错误
 	if errMsg != "" {
 		utils.ResponseMsgOk(context, errmsg.ERROR, errMsg)
 		return
 	}
-	avatarUrl := body["avatarUrl"]
-	nickName := body["nickName"]
-	gender, _ := strconv.Atoi(body["gender"])
-	language := body["language"]
-	city := body["city"]
-	country := body["country"]
-	province := body["province"]
-	findToken, _ := model.UseTokenGetAuth(openid)
 
-	// 该用户已经存在
-	if findToken.ID != 0 {
-		user, _ := model.GetUser(int(findToken.Uid))
-		data["token"] = findToken.Token
+	var data = make(map[string]interface{})
+	// 判断用户是否已经存在了
+	authUser, err := model.UseOpenidGetAuth(openid)
+	if err == errmsg.SUCCESS {
+		user, _ := model.GetUser(int(authUser.Uid))
 		data["data"] = user
+		data["token"] = authUser.Token
 		utils.ResponseDataOk(context, errmsg.UserAlreadyExist, data)
 		return
 	}
 
+	// 用户不存在进行注册
 	user := model.User{
-		AvatarUrl: avatarUrl,
-		NickName:  nickName,
-		Gender:    gender,
-		Language:  language,
-		City:      city,
-		Country:   country,
-		Province:  province,
+		AvatarUrl: body.AvatarUrl,
+		NickName:  body.NickName,
+		Gender:    body.Gender,
+		Language:  body.Language,
+		City:      body.City,
+		Country:   body.Country,
+		Province:  body.Province,
+	}
+	err = model.CreateUser(&user)
+
+	// 用户创建失败了
+	if err == errmsg.ERROR {
+		utils.ResponseOk(context, err)
+		return
 	}
 
-	model.CreateUser(&user)
-	token, c := middleware.SetToken(int(user.ID))
-	tokens := model.Authentication{
-		Uid:    user.ID,
-		Openid: openid,
-		Token:  token,
-	}
-
-	// 设置token失败
-	if c == errmsg.ERROR {
+	token, err := middleware.SetToken(int(user.ID))
+	// token 设置失败
+	if err == errmsg.ERROR {
 		utils.ResponseOk(context, errmsg.TokenCreateError)
 		return
 	}
 
-	isCreate := model.CreateTokens(&tokens)
-	//创建token失败
-	if isCreate == errmsg.InsertError {
-		utils.ResponseOk(context, isCreate)
+	// 插入生成的token信息
+	newToken := model.Authentication{
+		Uid:    user.ID,
+		Openid: openid,
+		Token:  token,
+	}
+	err = model.CreateTokens(&newToken)
+
+	//插入token认证失败
+	if err == errmsg.InsertError {
+		utils.ResponseOk(context, err)
 		return
 	}
 
 	// 最后成功
 	data["token"] = token
 	data["data"] = user
-	utils.ResponseDataOk(context, code, data)
+	utils.ResponseDataOk(context, err, data)
 }
 
 // GetUser 查询单个用户
