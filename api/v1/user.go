@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 	"star-server/middleware"
 	"star-server/model"
 	"star-server/utils"
@@ -22,17 +23,17 @@ func AddUser(context *gin.Context) {
 	var body addUser
 	_ = context.ShouldBindJSON(&body)
 
-	// 在后端验证openid
+	//在后端验证openid
 	openid, errMsg := utils.GetOpenid(body.Code)
 
-	// openid生成错误
+	//openid生成错误
 	if errMsg != "" {
 		utils.ResponseMsgOk(context, errmsg.ERROR, errMsg)
 		return
 	}
 
 	var data = make(map[string]interface{})
-	// 判断用户是否已经存在了
+	//判断用户是否已经存在了
 	authUser, err := model.UseOpenidGetAuth(openid)
 	if err == errmsg.SUCCESS {
 		user, _ := model.GetUser(int(authUser.Uid))
@@ -41,17 +42,13 @@ func AddUser(context *gin.Context) {
 		utils.ResponseDataOk(context, errmsg.UserAlreadyExist, data)
 		return
 	}
-
-	// 用户不存在进行注册
-	user := model.User{
-		AvatarUrl: body.AvatarUrl,
-		NickName:  body.NickName,
-		Gender:    body.Gender,
-		Language:  body.Language,
-		City:      body.City,
-		Country:   body.Country,
-		Province:  body.Province,
+	var user model.User
+	copyErr := copier.Copy(&user, &body)
+	if copyErr != nil {
+		utils.ResponseOk(context, errmsg.ERROR)
+		return
 	}
+	//用户不存在进行注册
 	err = model.CreateUser(&user)
 
 	// 用户创建失败了
