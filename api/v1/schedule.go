@@ -9,6 +9,17 @@ import (
 
 func GetSchedule(context *gin.Context) {
 	sectorName := context.Param("sector_name")
+	// 验证这个同学是否在这个部门
+	uid := context.Keys["uid"]
+	stuSector, code := model.FindStuSectorUseUid(model.StuSector{Uid: uid.(int)})
+	if code == errmsg.ERROR {
+		utils.ResponseMsgOk(context, errmsg.ERROR, "该学生没有添加部门")
+		return
+	}
+	if stuSector.SectorName != sectorName {
+		utils.ResponseMsgOk(context, errmsg.ERROR, "该学生没有添加该部门")
+		return
+	}
 	data, code := model.GetSectorSchedule(sectorName)
 	utils.ResponseDataOk(context, code, data)
 }
