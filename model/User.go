@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/base64"
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/scrypt"
 	"log"
@@ -75,8 +74,8 @@ func ScryptPw(passwd string) string {
 func EditUser(user *User) (code int) {
 	var data User
 	db.Model(&user).Select("authority").Find(&data)
-	fmt.Println(user.ID)
-	fmt.Println(user.NickName)
+	//fmt.Println(user.ID)
+	//fmt.Println(user.NickName)
 	user.Authority = data.Authority
 	err := db.Model(&user).Updates(&user).Error
 	if err != nil {
