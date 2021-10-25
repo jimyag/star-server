@@ -30,10 +30,19 @@ func GetStudent(studentId string) (Student, int) {
 	return student, errmsg.SUCCESS
 }
 
-func MatchStuNameAndId(stu_name string, stu_id string) bool {
+func UpdateStudent(student Student) (Student, int) {
 	var stu Student
-	_ = db.Where("student_id=?", stu_id).Find(&stu).Error
-	if stu.StudentName == stu_name {
+	err := db.Model(&student).Updates(&stu).Error
+	if err != nil {
+		return stu, errmsg.ERROR
+	}
+	return stu, errmsg.SUCCESS
+}
+
+func MatchStuNameAndId(stuName string, stuId string) bool {
+	var stu Student
+	_ = db.Where("student_id=?", stuId).Find(&stu).Error
+	if stu.StudentName == stuName {
 		return true
 	}
 	return false
