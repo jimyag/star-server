@@ -31,7 +31,6 @@ func AddUser(context *gin.Context) {
 		utils.ResponseMsgOk(context, errmsg.ERROR, errMsg)
 		return
 	}
-
 	var data = make(map[string]interface{})
 	//判断用户是否已经存在了
 	authUser, err := model.UseOpenidGetAuth(openid)
