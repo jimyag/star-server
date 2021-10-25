@@ -13,13 +13,13 @@ func CreateStuSect(context *gin.Context) {
 	var maps = make(map[string]string)
 	_ = context.ShouldBindJSON(&maps)
 	stuSect.Uid, _ = strconv.Atoi(context.Param("uid"))
+	stuSect.StudentId = maps["student_id"]
+	stuSect.SectorName = maps["sector_name"]
 	_, code := model.FindStuSectorUseSidSeName(&stuSect)
 	if code == errmsg.SUCCESS {
 		utils.ResponseOk(context, errmsg.StudentExist)
 		return
 	}
-	stuSect.StudentId = maps["student_id"]
-	stuSect.SectorName = maps["sector_name"]
 
 	var stuName = maps["student_name"]
 
