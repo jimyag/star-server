@@ -14,6 +14,7 @@ func CreateStudent(context *gin.Context) {
 		utils.ResponseOk(context, errmsg.ParameterError)
 		return
 	}
+	// 验证学生是否存在
 	_, code := model.GetStudent(data.StudentId)
 	if code == errmsg.SUCCESS {
 		utils.ResponseOk(context, errmsg.StudentExist)
@@ -31,4 +32,21 @@ func GetStudent(context *gin.Context) {
 		return
 	}
 	utils.ResponseDataOk(context, code, data)
+}
+
+func UpdateStudent(context *gin.Context) {
+	var student model.Student
+	_ = context.ShouldBindJSON(&student)
+
+	if student.StudentId == "" {
+		utils.ResponseOk(context, errmsg.ParameterError)
+		return
+	}
+
+	newStudent, err := model.UpdateStudent(student)
+	if err == errmsg.ERROR {
+		utils.ResponseOk(context, errmsg.ERROR)
+		return
+	}
+	utils.ResponseDataOk(context, errmsg.SUCCESS, newStudent)
 }
