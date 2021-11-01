@@ -52,19 +52,19 @@ func InitRouter() {
 	adminV1.Use(middleware.AdminToken())
 	{
 		// 紧急通知
-		authV1.POST("notice/add", v1.CreateNotice)
+		adminV1.POST("notice/add", v1.CreateNotice)
 		// 文章
-		authV1.POST("article/add", v1.CreateArticle)
+		adminV1.POST("article/add", v1.CreateArticle)
 		//部门
-		authV1.POST("sector/add", v1.CreateSector)
+		adminV1.POST("sector/add", v1.CreateSector)
 		// 学生
-		authV1.POST("student/add", v1.CreateStudent)
+		adminV1.POST("student/add", v1.CreateStudent)
 		// 一条值班记录
-		authV1.POST("schedule/add", v1.AddOneRecord)
+		adminV1.POST("schedule/add", v1.AddOneRecord)
 		//部门邀请码
-		authV1.POST("sectorkey/add", v1.CreateSectorKey)
+		adminV1.POST("sectorkey/add", v1.CreateSectorKey)
 		// 更新用户权限
-		authV1.PUT("user/:uid/updateauth", v1.UpdateUserAuth)
+		adminV1.PUT("user/:uid/updateauth", v1.UpdateUserAuth)
 
 	}
 	err := r.Run(utils.HttpPort)
