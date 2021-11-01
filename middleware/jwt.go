@@ -3,6 +3,7 @@ package middleware
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"star-server/model"
 	"star-server/utils"
 	"star-server/utils/errmsg"
 	"strings"
@@ -65,6 +66,47 @@ func JwtToken() gin.HandlerFunc {
 		key, tCode := CheckToken(checkToken[1])
 		if tCode == errmsg.ERROR {
 			utils.ResponseOk(context, errmsg.TokenError)
+			return
+		}
+		//检查是否过期
+		if time.Now().Unix() > key.ExpiresAt {
+			utils.ResponseOk(context, errmsg.TokenTimeOut)
+			return
+		}
+		context.Set("uid", key.Uid)
+		context.Next()
+	}
+}
+
+func AdminToken() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		tokenHerder := context.Request.Header.Get("Authorization")
+		//验证是否有token
+		if tokenHerder == "" {
+			utils.ResponseOk(context, errmsg.TokenNotExist)
+			return
+		}
+		//验证格式
+		checkToken := strings.SplitN(tokenHerder, " ", 2)
+		if len(checkToken) != 2 && checkToken[0] != "Bearer" {
+			utils.ResponseOk(context, errmsg.TokenFormatError)
+			return
+		}
+		//检查是否合法
+		key, tCode := CheckToken(checkToken[1])
+		if tCode == errmsg.ERROR {
+			utils.ResponseOk(context, errmsg.TokenError)
+			return
+		}
+		user, err := model.GetUser(key.Uid)
+		// 检查用户是否存在
+		if err == errmsg.ERROR {
+			utils.ResponseOk(context, errmsg.UserNotExist)
+			return
+		}
+		// 检查用户权限
+		if user.Authority == 0 {
+			utils.ResponseOk(context, errmsg.InsufficientPermissions)
 			return
 		}
 		//检查是否过期
