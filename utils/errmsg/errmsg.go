@@ -4,8 +4,9 @@ const (
 	SUCCESS = 0
 	ERROR   = 500
 	// UserAlreadyExist 用户
-	UserAlreadyExist = 101
-	UserNotExist     = 102
+	UserAlreadyExist        = 101
+	UserNotExist            = 102
+	InsufficientPermissions = 103
 	// TokenError token相关
 	TokenError       = 201
 	TokenTimeOut     = 202
@@ -39,8 +40,9 @@ var codeMsg = map[int]string{
 	SUCCESS: "成功",
 	ERROR:   "失败",
 
-	UserAlreadyExist: "用户已存在",
-	UserNotExist:     "用户不存在",
+	UserAlreadyExist:        "用户已存在",
+	UserNotExist:            "用户不存在",
+	InsufficientPermissions: "权限不足",
 
 	TokenError:       "Token错误",
 	TokenTimeOut:     "Token过期",
