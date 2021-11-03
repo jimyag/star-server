@@ -2,3 +2,7 @@
 latest_log.log
 star-server.exe
 .idea
+/config/releaseConfig.ini
+/docs/流程.md
+/model/MyTest.go
+/api/v1/mytest.go
