@@ -28,7 +28,7 @@ func GetArticle(context *gin.Context) {
 func CreateArticle(context *gin.Context) {
 	var paper model.Article
 	_ = context.ShouldBindJSON(&paper)
-	if paper.Title == "" || paper.Content == "" {
+	if paper.Title == "" {
 		utils.ResponseOk(context, errmsg.ParameterError)
 		return
 	}
