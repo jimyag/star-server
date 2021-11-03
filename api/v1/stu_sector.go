@@ -15,7 +15,16 @@ func CreateStuSect(context *gin.Context) {
 	stuSect.Uid, _ = strconv.Atoi(context.Param("uid"))
 	stuSect.StudentId = maps["student_id"]
 	stuSect.SectorName = maps["sector_name"]
-	_, code := model.FindStuSectorUseSidSeName(&stuSect)
+	real_key, code := model.UseSectorNameFindSectorKey(stuSect.SectorName)
+	if code == errmsg.ERROR {
+		utils.ResponseOk(context, errmsg.SectorKeyNotExist)
+		return
+	}
+	if real_key != maps["sector_key"] {
+		utils.ResponseOk(context, errmsg.SectorKeyNotExist)
+		return
+	}
+	_, code = model.FindStuSectorUseSidSeName(&stuSect)
 	if code == errmsg.SUCCESS {
 		utils.ResponseOk(context, errmsg.StudentExist)
 		return
