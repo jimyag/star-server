@@ -13,8 +13,7 @@ type Student struct {
 }
 
 func CreateStudent(data *Student) int {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -22,25 +21,23 @@ func CreateStudent(data *Student) int {
 
 func GetStudent(studentId string) (Student, int) {
 	var student Student
-	err := db.Where("student_id=?", studentId).Find(&student).Error
-	if err != nil {
-		return student, errmsg.ERROR
+	if result := db.Limit(1).Where("student_id=?", studentId).Find(&student); result.RowsAffected == 0 {
+		return Student{}, errmsg.ERROR
 	}
 	return student, errmsg.SUCCESS
 }
 
 func UpdateStudent(student Student) (Student, int) {
 	var stu Student
-	err := db.Model(&student).Updates(&stu).Error
-	if err != nil {
-		return stu, errmsg.ERROR
+	if result := db.Model(&student).Updates(&stu); result.RowsAffected == 0 {
+		return Student{}, errmsg.ERROR
 	}
 	return stu, errmsg.SUCCESS
 }
 
 func MatchStuNameAndId(stuName string, stuId string) bool {
 	var stu Student
-	_ = db.Where("student_id=?", stuId).Find(&stu).Error
+	_ = db.Limit(1).Where("student_id=?", stuId).Find(&stu)
 	if stu.StudentName == stuName {
 		return true
 	}

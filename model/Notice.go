@@ -12,16 +12,14 @@ type Notice struct {
 
 func GetNotice() (int, []Notice) {
 	var notices []Notice
-	err := db.Order("created_at desc").Limit(3).Find(&notices).Error
-	if err != nil {
+	if result := db.Order("created_at desc").Limit(3).Find(&notices); result.RowsAffected == 0 {
 		return errmsg.ERROR, nil
 	}
 	return errmsg.SUCCESS, notices
 }
 
 func AddNotice(data *Notice) int {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR // 500
 	}
 	return errmsg.SUCCESS

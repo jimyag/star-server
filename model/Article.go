@@ -16,8 +16,7 @@ type Article struct {
 }
 
 func CreatePaper(data *Article) int {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -25,8 +24,7 @@ func CreatePaper(data *Article) int {
 
 func GetPaper(pageSize int, pageIndex int) ([]Article, int) {
 	var paperList []Article
-	err := db.Limit(pageSize).Offset((pageIndex - 1) * pageSize).Find(&paperList).Error
-	if err != nil {
+	if result := db.Limit(pageSize).Offset((pageIndex - 1) * pageSize).Find(&paperList); result.RowsAffected == 0 {
 		return nil, errmsg.ERROR
 	}
 	return paperList, errmsg.SUCCESS

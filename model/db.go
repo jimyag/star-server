@@ -3,7 +3,6 @@ package model
 import (
 	"fmt"
 	"gorm.io/driver/postgres"
-
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 
@@ -18,6 +17,7 @@ func InitDb() {
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 		NamingStrategy:         schema.NamingStrategy{SingularTable: true},
+		//Logger:                 logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		fmt.Println("连接数据库失败，请检查参数", err)

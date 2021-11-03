@@ -30,8 +30,7 @@ func CheckUser(id uint) (code int) {
 }
 
 func CreateUser(data *User) (code int) {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR // 500
 	}
 	return errmsg.SUCCESS
@@ -39,9 +38,8 @@ func CreateUser(data *User) (code int) {
 
 func GetUser(id int) (User, int) {
 	var user User
-	err := db.Limit(1).Where("id= ?", id).Find(&user).Error
-	if err != nil {
-		return user, errmsg.ERROR
+	if result := db.Limit(1).Where("id= ?", id).Find(&user); result.RowsAffected == 0 {
+		return User{}, errmsg.ERROR
 	}
 	return user, errmsg.SUCCESS
 }
@@ -49,8 +47,7 @@ func GetUser(id int) (User, int) {
 // GetUsers 获得用户列表
 func GetUsers(pageSize int, pageIndex int) []User {
 	var users []User
-	err = db.Limit(pageSize).Offset((pageIndex - 1) * pageSize).Find(&users).Error
-	if err != nil {
+	if result := db.Limit(pageSize).Offset((pageIndex - 1) * pageSize).Find(&users); result.RowsAffected == 0 {
 		return nil
 	}
 	return users
@@ -73,11 +70,8 @@ func ScryptPw(passwd string) string {
 func EditUser(user *User) (code int) {
 	var data User
 	db.Model(&user).Select("authority").Find(&data)
-	//fmt.Println(user.ID)
-	//fmt.Println(user.NickName)
 	user.Authority = data.Authority
-	err := db.Model(&user).Updates(&user).Error
-	if err != nil {
+	if result := db.Model(&user).Updates(&user); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -87,8 +81,7 @@ func EditUser(user *User) (code int) {
 func UpdateUserAuth(data *User) (code int) {
 	var auth = make(map[string]int)
 	auth["authority"] = data.Authority
-	err := db.Model(&data).Updates(auth).Error
-	if err != nil {
+	if result := db.Model(&data).Updates(auth); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS

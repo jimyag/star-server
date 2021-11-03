@@ -14,8 +14,7 @@ type Sector struct {
 }
 
 func CreateSector(data *Sector) int {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -32,8 +31,7 @@ func GetSector(pageSize int, pageIndex int) ([]Sector, int) {
 
 func UseNameGetSector(sectorName string) (Sector, int) {
 	var sector Sector
-	err := db.Where("sector_name=?", sectorName).Find(&sector).Error
-	if err != nil {
+	if result := db.Limit(1).Where("sector_name=?", sectorName).Find(&sector); result.RowsAffected == 0 {
 		return sector, errmsg.ERROR
 	}
 	return sector, errmsg.SUCCESS

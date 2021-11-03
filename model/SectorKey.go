@@ -11,8 +11,7 @@ type SectorKey struct {
 }
 
 func CreateSectKey(key *SectorKey) int {
-	err := db.Create(&key).Error
-	if err != nil {
+	if result := db.Create(&key); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -20,8 +19,7 @@ func CreateSectKey(key *SectorKey) int {
 
 func FindSectorKey(key SectorKey) (SectorKey, int) {
 	var k SectorKey
-	err := db.Where("sector_name = ?", key.SectorName).Find(&k).Error
-	if err != nil {
+	if result := db.Limit(1).Where("sector_name = ?", key.SectorName).Find(&k); result.RowsAffected == 0 {
 		return SectorKey{}, errmsg.ERROR
 	}
 	return k, errmsg.SUCCESS

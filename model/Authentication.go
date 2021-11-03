@@ -12,8 +12,7 @@ type Authentication struct {
 }
 
 func CreateTokens(data *Authentication) int {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.InsertError
 	}
 	return errmsg.SUCCESS
@@ -21,8 +20,7 @@ func CreateTokens(data *Authentication) int {
 
 func UseUidGetAuth(uid uint) (Authentication, int) {
 	var data Authentication
-	err := db.Where("uid=?", uid).Find(&data).Error
-	if err != nil {
+	if result := db.Where("uid=?", uid).Find(&data); result.RowsAffected == 0 {
 		return Authentication{}, errmsg.SelectError
 	}
 	return data, errmsg.SUCCESS
@@ -30,8 +28,7 @@ func UseUidGetAuth(uid uint) (Authentication, int) {
 
 func UseTokenGetAuth(token string) (Authentication, int) {
 	var data Authentication
-	err := db.Where("token=?", token).Find(&data).Error
-	if err != nil {
+	if result := db.Where("token=?", token).Find(&data); result.RowsAffected == 0 {
 		return Authentication{}, errmsg.SelectError
 	}
 	return data, errmsg.SUCCESS
@@ -39,8 +36,7 @@ func UseTokenGetAuth(token string) (Authentication, int) {
 
 func UseOpenidGetAuth(openid string) (Authentication, int) {
 	var data Authentication
-	err := db.Where("openid=?", openid).Find(&data).Error
-	if err != nil {
+	if result := db.Limit(1).Where("openid=?", openid).Find(&data); result.RowsAffected == 0 {
 		return Authentication{}, errmsg.SelectError
 	}
 	return data, errmsg.SUCCESS

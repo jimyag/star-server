@@ -14,8 +14,7 @@ type WorkForm struct {
 }
 
 func CreateForm(data *WorkForm) int {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -25,8 +24,8 @@ func UpdateForm(id int, data *WorkForm) int {
 	var form WorkForm
 	var maps = make(map[string]interface{})
 	maps["remark"] = data.Remark
-	err := db.Model(&form).Where("id=?", id).Updates(maps).Error
-	if err != nil {
+	maps["end_time"] = data.EndTime
+	if result := db.Model(&form).Where("id=?", id).Updates(maps); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -34,9 +33,8 @@ func UpdateForm(id int, data *WorkForm) int {
 
 func GetForm(studentId string) ([]WorkForm, int) {
 	var forms []WorkForm
-	err := db.Where("student_id=?", studentId).Find(&forms).Error
-	if err != nil {
-		return forms, errmsg.ERROR
+	if result := db.Where("student_id=?", studentId).Find(&forms); result.RowsAffected == 0 {
+		return nil, errmsg.ERROR
 	}
 	return forms, errmsg.SUCCESS
 }

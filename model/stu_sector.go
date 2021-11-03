@@ -12,8 +12,7 @@ type StuSector struct {
 }
 
 func CreateStuSect(stuSector *StuSector) (code int) {
-	err := db.Create(&stuSector).Error
-	if err != nil {
+	if result := db.Create(&stuSector); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
@@ -21,8 +20,7 @@ func CreateStuSect(stuSector *StuSector) (code int) {
 
 func FindStuSectorUseSidSeName(data *StuSector) (StuSector, int) {
 	var stuS StuSector
-	err := db.Where("student_id=? and sector_name=?", data.StudentId, data.SectorName).Find(&stuS).Error
-	if err != nil {
+	if result := db.Limit(1).Where("student_id=? and sector_name=?", data.StudentId, data.SectorName).Find(&stuS); result.RowsAffected == 0 {
 		return StuSector{}, errmsg.ERROR
 	}
 	return stuS, errmsg.SUCCESS
@@ -30,8 +28,7 @@ func FindStuSectorUseSidSeName(data *StuSector) (StuSector, int) {
 
 func FindStuSectorUseUid(data StuSector) (StuSector, int) {
 	var stus StuSector
-	err := db.Where("uid=?", data.Uid).Find(&stus).Error
-	if err != nil {
+	if result := db.Limit(1).Where("uid=?", data.Uid).Find(&stus); result.RowsAffected == 0 {
 		return stus, errmsg.ERROR
 	}
 	return stus, errmsg.SUCCESS

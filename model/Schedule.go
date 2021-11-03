@@ -20,16 +20,14 @@ func GetSectorSchedule(sectorName string) ([]Schedule, int) {
 		return nil, errmsg.SectorNotExist
 	}
 	var schedules []Schedule
-	err := db.Where("sector_name=?", sectorName).Find(&schedules).Error
-	if err != nil {
+	if result := db.Limit(1).Where("sector_name=?", sectorName).Find(&schedules); result.RowsAffected == 0 {
 		return nil, errmsg.ERROR
 	}
 	return schedules, errmsg.SUCCESS
 }
 
 func CreateSchedule(data *Schedule) int {
-	err := db.Create(&data).Error
-	if err != nil {
+	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
