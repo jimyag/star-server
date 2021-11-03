@@ -33,8 +33,7 @@ func InitDb() {
 		&WorkForm{},
 		&Authentication{},
 		&SectorKey{},
-		&StuSector{},
-		&Mytest{})
+		&StuSector{})
 	if err != nil {
 		fmt.Println("数据库创建失败", err)
 		return

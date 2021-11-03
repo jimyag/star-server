@@ -1,18 +1,18 @@
 package model
 
 import (
+	"github.com/lib/pq"
 	"star-server/utils/errmsg"
 )
 
 type Article struct {
 	Model
-	Title         string `gorm:"type:varchar(100)" json:"title"`
-	ReleaseTime   string `gorm:"type:varchar(100)" json:"release_time"`
-	ReleaseSector string `gorm:"type:varchar(100)" json:"release_sector"`
-	Content       string `gorm:"type:text" json:"content"`
-	ReleaseName   string `gorm:"type:varchar(40)" json:"release_name"`
-	Phone         string `gorm:"type:char(11)" json:"phone"`
-	Attachment    string `gorm:"type:text" json:"attachment"`
+	Title         string         `gorm:"type:varchar(100)" json:"title"`
+	ReleaseTime   string         `gorm:"type:varchar(100)" json:"release_time"`
+	ReleaseSector string         `gorm:"type:varchar(100)" json:"release_sector"`
+	Content       string         `gorm:"type:text" json:"content"`
+	Author        string         `gorm:"type:varchar(40)" json:"author"`
+	Attachment    pq.StringArray `gorm:"type:text[]" json:"attachment"`
 }
 
 func CreatePaper(data *Article) int {
