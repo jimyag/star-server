@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type StuSector struct {
-	gorm.Model
+	Model
 	Uid        int    `gorm:"type:int;" json:"uid"`
 	StudentId  string `gorm:"type:char(10)" json:"student_id"`
 	SectorName string `gorm:"type:varchar(50)" json:"sector_name"`

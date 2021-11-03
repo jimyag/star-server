@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type Schedule struct {
-	gorm.Model
+	Model
 	SectorName  string `gorm:"type:varchar(50)" json:"sector_name"`
 	StudentId   string `gorm:"type:char(10)" json:"student_id"`
 	StudentName string `gorm:"type:varchar(40);" json:"student_name"`

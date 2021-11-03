@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type Notice struct {
-	gorm.Model
+	Model
 	Content string `gorm:"type:varchar(100);" json:"content"`
 	Remark  string `gorm:"type:varchar(100)" json:"remark"`
 }

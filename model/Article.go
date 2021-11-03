@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type Article struct {
-	gorm.Model
+	Model
 	Title         string `gorm:"type:varchar(100)" json:"title"`
 	ReleaseTime   string `gorm:"type:varchar(100)" json:"release_time"`
 	ReleaseSector string `gorm:"type:varchar(100)" json:"release_sector"`

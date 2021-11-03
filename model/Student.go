@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type Student struct {
-	gorm.Model
+	Model
 	StudentName string `gorm:"type:varchar(40)" json:"student_name"`
 	StudentId   string `gorm:"type:char(10)" json:"student_id"`
 	Major       string `gorm:"type:varchar(50)" json:"major"`

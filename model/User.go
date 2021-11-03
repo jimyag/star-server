@@ -3,13 +3,12 @@ package model
 import (
 	"encoding/base64"
 	"golang.org/x/crypto/scrypt"
-	"gorm.io/gorm"
 	"log"
 	"star-server/utils/errmsg"
 )
 
 type User struct {
-	gorm.Model
+	Model
 	AvatarUrl string `gorm:"type:text;not null" json:"avatarUrl"`
 	NickName  string `gorm:"type:varchar(20) ;not null" json:"nickName"`
 	Gender    int    `gorm:"type:int;not null" json:"gender"`

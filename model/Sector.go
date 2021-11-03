@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type Sector struct {
-	gorm.Model
+	Model
 	SectorName        string `gorm:"type:varchar(50)" json:"sector_name"`
 	SectorInformation string `gorm:"type:text" json:"sector_information"`
 	Supervisor        string `gorm:"type:varchar(40)" json:"supervisor"`

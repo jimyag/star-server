@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type Authentication struct {
-	gorm.Model
+	Model
 	Openid string `gorm:"type:char(128);not null" json:"openid"`
 	Token  string `gorm:"type:text;not null" json:"token"`
 	Uid    uint   `gorm:"type:int" json:"uid"`
