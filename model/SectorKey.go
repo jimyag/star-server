@@ -24,3 +24,11 @@ func FindSectorKey(key SectorKey) (SectorKey, int) {
 	}
 	return k, errmsg.SUCCESS
 }
+
+func UseSectorNameFindSectorKey(sectorName string) (key string, code int) {
+	var k SectorKey
+	if result := db.Limit(1).Where("sector_name=?", sectorName).Find(&k); result.RowsAffected == 0 {
+		return "", errmsg.ERROR
+	}
+	return k.Key, errmsg.SUCCESS
+}

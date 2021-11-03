@@ -47,6 +47,9 @@ func InitRouter() {
 		// 部门
 		routerV1.GET("sector", v1.GetSector)
 
+		routerV1.GET("test", v1.GetTest)
+		routerV1.POST("test", v1.CreateTest)
+
 	}
 	adminV1 := r.Group("api/v1")
 	adminV1.Use(middleware.AdminToken())

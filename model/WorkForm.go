@@ -20,21 +20,29 @@ func CreateForm(data *WorkForm) int {
 	return errmsg.SUCCESS
 }
 
-func UpdateForm(id int, data *WorkForm) int {
+func UpdateForm(data *WorkForm) int {
 	var form WorkForm
-	var maps = make(map[string]interface{})
-	maps["remark"] = data.Remark
-	maps["end_time"] = data.EndTime
-	if result := db.Model(&form).Where("id=?", id).Updates(maps); result.RowsAffected == 0 {
+	//var maps = make(map[string]interface{})
+	//maps["remark"] = data.Remark
+	//maps["end_time"] = data.EndTime
+	if result := db.Model(&form).Where("id=?", data.ID).Updates(data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
 }
 
-func GetForm(studentId string) ([]WorkForm, int) {
+func GetForms(studentId string) ([]WorkForm, int) {
 	var forms []WorkForm
 	if result := db.Where("student_id=?", studentId).Find(&forms); result.RowsAffected == 0 {
 		return nil, errmsg.ERROR
 	}
 	return forms, errmsg.SUCCESS
+}
+
+func GetFormUseId(id uint) (WorkForm, int) {
+	var w WorkForm
+	if result := db.Limit(1).Where("id=?", id).Find(&w); result.RowsAffected == 0 {
+		return w, errmsg.ERROR
+	}
+	return w, errmsg.SUCCESS
 }
