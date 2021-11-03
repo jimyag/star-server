@@ -2,8 +2,8 @@ package model
 
 import (
 	"encoding/base64"
-	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/scrypt"
+	"gorm.io/gorm"
 	"log"
 	"star-server/utils/errmsg"
 )
