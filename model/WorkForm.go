@@ -1,12 +1,13 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"star-server/utils/errmsg"
 )
 
 type WorkForm struct {
-	gorm.Model
+	Model
+	BeginTime  int    `gorm:"type:int" json:"begin_time"`
+	EndTime    int    `gorm:"type:int" json:"end_time"`
 	Remark     string `gorm:"type:varchar(100)" json:"remark"`
 	SectorName string `gorm:"type:varchar(50)" json:"sector_name"`
 	StudentId  string `gorm:"type:char(10)" json:"student_id"`
