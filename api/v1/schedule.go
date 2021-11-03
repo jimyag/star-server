@@ -49,6 +49,10 @@ func AddOneRecord(context *gin.Context) {
 		return
 	}
 	// 创建一条记录
+	if !model.ScheduleRecordEquals(schedule) {
+		utils.ResponseMsgOk(context, errmsg.ERROR, "已有一条该地点时间的值班记录了")
+		return
+	}
 	code = model.CreateSchedule(&schedule)
 	if code == errmsg.ERROR {
 		utils.ResponseOk(context, code)
