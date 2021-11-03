@@ -49,6 +49,6 @@ func LoadData(file *ini.File) {
 }
 
 func LoadAgent(file *ini.File) {
-	AgentAppid = file.Section("agent").Key("Appid  ").String()
-	AgentSecret = file.Section("agent").Key("Secret ").String()
+	AgentAppid = file.Section("agent").Key("Appid").String()
+	AgentSecret = file.Section("agent").Key("Secret").String()
 }
