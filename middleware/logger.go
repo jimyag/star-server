@@ -1,11 +1,13 @@
 package middleware
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	retalog "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+	"io/ioutil"
 	"math"
 	"os"
 	"time"
@@ -42,35 +44,41 @@ func Logger() gin.HandlerFunc {
 	})
 	logger.AddHook(Hook)
 	return func(context *gin.Context) {
+		data, err := context.GetRawData()
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
 		startTime := time.Now()
 		// 洋葱模型
 		context.Next()
 		// 从开始到结束的时间
 		stopTime := time.Since(startTime)
 		spendTime := fmt.Sprintf("%d ms", int(math.Ceil(float64(stopTime.Nanoseconds())/1000000.0)))
-		hostName, err := os.Hostname()
-		if err != nil {
-			hostName = "unknown"
-		}
+		//hostName, err := os.Hostname()
+		//if err != nil {
+		//	hostName = "unknown"
+		//}
 		statusCode := context.Writer.Status()
-		clientIp := context.ClientIP()
-		userAgent := context.Request.UserAgent()
-		dataSize := context.Writer.Size()
-		//body, _ := ioutil.ReadAll(context.Request.Body)
-		if dataSize < 0 {
-			dataSize = 0
-		}
+		//clientIp := context.ClientIP()
+		//userAgent := context.Request.UserAgent()
+		//dataSize := context.Writer.Size()
+		//fmt.Println(string(body1))
+		//if dataSize < 0 {
+		//	dataSize = 0
+		//}
 		method := context.Request.Method
 		path := context.Request.RequestURI
 		entry := logger.WithFields(logrus.Fields{
-			"HostName":  hostName,
+			//"HostName":  hostName,
 			"status":    statusCode,
 			"SpendTime": spendTime,
-			"Ip":        clientIp,
-			"Method":    method,
-			"Path":      path,
-			"DataSize":  dataSize,
-			"Agent":     userAgent,
+			//"Ip":        clientIp,
+			"Method": method,
+			"Path":   path,
+			"Body":   string(data),
+			//"DataSize":  dataSize,
+			//"Agent":     userAgent,
 		})
 		//记录系统内部的错误
 		if len(context.Errors) > 0 {
