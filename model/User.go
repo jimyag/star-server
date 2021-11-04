@@ -69,7 +69,7 @@ func ScryptPw(passwd string) string {
 // EditUser 只能更新处认证之外的其他信息
 func EditUser(user *User) (code int) {
 	var data User
-	db.Model(&user).Select("authority").Find(&data)
+	db.Model(&user).Select("authority").Where("id=?", user.ID).Find(&data)
 	user.Authority = data.Authority
 	if result := db.Model(&user).Updates(&user); result.RowsAffected == 0 {
 		return errmsg.ERROR

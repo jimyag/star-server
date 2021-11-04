@@ -29,7 +29,7 @@ func GetStudent(studentId string) (Student, int) {
 
 func UpdateStudent(student Student) (Student, int) {
 	var stu Student
-	if result := db.Model(&student).Updates(&stu); result.RowsAffected == 0 {
+	if result := db.Model(&student).Where("student_id=?", student.StudentId).Updates(&student); result.RowsAffected == 0 {
 		return Student{}, errmsg.ERROR
 	}
 	return stu, errmsg.SUCCESS

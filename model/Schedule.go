@@ -35,7 +35,7 @@ func CreateSchedule(data *Schedule) int {
 
 func ScheduleRecordEquals(record Schedule) bool {
 	var s Schedule
-	if result := db.Where("sector_name=? and student_id=?and day_of_week=? and course_index=? and address= ?", record.SectorName, record.StudentId, record.DayOfWeek, record.CourseIndex, record.Address).Find(&s); result.RowsAffected == 0 {
+	if result := db.Limit(1).Where("sector_name=? and student_id=?and day_of_week=? and course_index=? and address= ?", record.SectorName, record.StudentId, record.DayOfWeek, record.CourseIndex, record.Address).Find(&s); result.RowsAffected == 0 {
 		return true
 	}
 	return false

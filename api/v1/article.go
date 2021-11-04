@@ -16,10 +16,10 @@ func GetArticle(context *gin.Context) {
 		return
 	}
 	if pageIndex == 0 {
-		pageIndex = -1
+		pageIndex = 1
 	}
 	if pageSize == 0 {
-		pageSize = -1
+		pageSize = 5
 	}
 	data, code := model.GetPaper(pageSize, pageIndex)
 	utils.ResponseDataOk(context, code, data)

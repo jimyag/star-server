@@ -24,7 +24,7 @@ func CreatePaper(data *Article) int {
 
 func GetPaper(pageSize int, pageIndex int) ([]Article, int) {
 	var paperList []Article
-	if result := db.Find(&paperList); result.RowsAffected == 0 {
+	if result := db.Limit(pageSize).Offset((pageIndex - 1) * pageSize).Find(&paperList); result.RowsAffected == 0 {
 		return nil, errmsg.ERROR
 	}
 	return paperList, errmsg.SUCCESS

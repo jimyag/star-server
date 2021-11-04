@@ -22,8 +22,7 @@ func CreateSector(data *Sector) int {
 
 func GetSector(pageSize int, pageIndex int) ([]Sector, int) {
 	var sectors []Sector
-	err := db.Find(&sectors).Error
-	if err != nil {
+	if result := db.Limit(pageSize).Offset((pageIndex - 1) * pageSize).Find(&sectors); result.RowsAffected == 0 {
 		return nil, errmsg.ERROR
 	}
 	return sectors, errmsg.SUCCESS

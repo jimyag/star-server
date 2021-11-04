@@ -21,11 +21,7 @@ func CreateForm(data *WorkForm) int {
 }
 
 func UpdateForm(data *WorkForm) int {
-	var form WorkForm
-	//var maps = make(map[string]interface{})
-	//maps["remark"] = data.Remark
-	//maps["end_time"] = data.EndTime
-	if result := db.Model(&form).Where("id=?", data.ID).Updates(data); result.RowsAffected == 0 {
+	if result := db.Model(&data).Updates(data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS

@@ -20,7 +20,7 @@ func CreateTokens(data *Authentication) int {
 
 func UseUidGetAuth(uid uint) (Authentication, int) {
 	var data Authentication
-	if result := db.Where("uid=?", uid).Find(&data); result.RowsAffected == 0 {
+	if result := db.Limit(1).Where("uid=?", uid).Find(&data); result.RowsAffected == 0 {
 		return Authentication{}, errmsg.SelectError
 	}
 	return data, errmsg.SUCCESS
@@ -28,7 +28,7 @@ func UseUidGetAuth(uid uint) (Authentication, int) {
 
 func UseTokenGetAuth(token string) (Authentication, int) {
 	var data Authentication
-	if result := db.Where("token=?", token).Find(&data); result.RowsAffected == 0 {
+	if result := db.Limit(1).Where("token=?", token).Find(&data); result.RowsAffected == 0 {
 		return Authentication{}, errmsg.SelectError
 	}
 	return data, errmsg.SUCCESS
