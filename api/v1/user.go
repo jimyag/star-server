@@ -47,6 +47,7 @@ func AddUser(context *gin.Context) {
 		utils.ResponseOk(context, errmsg.ERROR)
 		return
 	}
+	user.Authority = 0
 	//用户不存在进行注册
 	err = model.CreateUser(&user)
 
@@ -120,7 +121,7 @@ func UpdateUser(context *gin.Context) {
 	user.ID = uint(id)
 
 	uid := context.Keys["uid"]
-	fmt.Println(uid, user.ID)
+	user.Authority = 0
 	if int(user.ID) == uid {
 		// 编辑用户资料
 		if model.EditUser(&user) == errmsg.ERROR {

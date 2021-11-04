@@ -16,7 +16,7 @@ type User struct {
 	City      string `gorm:"type:varchar(50);" json:"city"`
 	Language  string `gorm:"type:varchar(30);" json:"language"`
 	Country   string `gorm:"type:varchar(50);" json:"country"`
-	Authority int    `gorm:"type:int;default 0" json:"authority"`
+	Authority int    `gorm:"type:int;default: 0" json:"authority"`
 }
 
 // CheckUser 用户是否存在
