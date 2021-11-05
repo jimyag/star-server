@@ -25,25 +25,27 @@ func GetSchedule(context *gin.Context) {
 }
 
 func AddOneRecord(context *gin.Context) {
+	sectorName := context.Param("sector_name")
+	// 验证是否有这个部门
+	_, code := model.UseNameGetSector(sectorName)
+	if code == errmsg.ERROR {
+		utils.ResponseOk(context, errmsg.SectorNotExist)
+		return
+	}
 	var schedule model.Schedule
 	_ = context.ShouldBindJSON(&schedule)
-	var code int
 	// 验证学号和姓名是否正确
 	if !model.MatchStuNameAndId(schedule.StudentName, schedule.StudentId) {
 		utils.ResponseOk(context, errmsg.StudentNotExist)
 		return
 	}
-	// 验证是否有这个部门
-	sector, code := model.UseNameGetSector(schedule.SectorName)
+	// 这个同学是否加这个部门了
+	_, code = model.FindStuSectorUseSidSeName(model.StuSector{StudentId: schedule.StudentId, SectorName: sectorName})
 	if code == errmsg.ERROR {
-		utils.ResponseOk(context, errmsg.SectorNotExist)
+		utils.ResponseOk(context, errmsg.StudentNotExist)
 		return
 	}
-	// 验证地点是否正确
-	if sector.Address != schedule.Address {
-		utils.ResponseOk(context, errmsg.SectorAddressNotExist)
-		return
-	}
+	schedule.SectorName = sectorName
 	if schedule.DayOfWeek > 5 || schedule.DayOfWeek < 1 || schedule.CourseIndex < 1 || schedule.CourseIndex > 4 {
 		utils.ResponseMsgOk(context, errmsg.ERROR, "time error")
 		return

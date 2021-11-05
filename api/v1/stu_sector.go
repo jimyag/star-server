@@ -13,6 +13,11 @@ func CreateStuSect(context *gin.Context) {
 	var maps = make(map[string]string)
 	_ = context.ShouldBindJSON(&maps)
 	stuSect.Uid, _ = strconv.Atoi(context.Param("uid"))
+	uid := context.Keys["uid"]
+	if uid != stuSect.Uid {
+		utils.ResponseOk(context, errmsg.ERROR)
+		return
+	}
 	stuSect.StudentId = maps["student_id"]
 	stuSect.SectorName = maps["sector_name"]
 	real_key, code := model.UseSectorNameFindSectorKey(stuSect.SectorName)
@@ -24,7 +29,7 @@ func CreateStuSect(context *gin.Context) {
 		utils.ResponseOk(context, errmsg.SectorKeyNotExist)
 		return
 	}
-	_, code = model.FindStuSectorUseSidSeName(&stuSect)
+	_, code = model.FindStuSectorUseSidSeName(stuSect)
 	if code == errmsg.SUCCESS {
 		utils.ResponseOk(context, errmsg.StudentExist)
 		return
@@ -50,6 +55,10 @@ func CreateStuSect(context *gin.Context) {
 
 func FindStuSector(context *gin.Context) {
 	var uid, _ = strconv.Atoi(context.Param("uid"))
+	if realUid := context.Keys["uid"]; realUid != uid {
+		utils.ResponseOk(context, errmsg.ERROR)
+		return
+	}
 	var stuS, err = model.FindStuSectorUseUid(model.StuSector{Uid: uid})
 	if err == errmsg.ERROR {
 		utils.ResponseMsgOk(context, err, "该同学没有加入部门")
@@ -60,7 +69,6 @@ func FindStuSector(context *gin.Context) {
 	data["student_id"] = stu.StudentId
 	data["student_name"] = stu.StudentName
 	data["sector_name"] = stuS.SectorName
-	data["sector_key"] = nil
 	utils.ResponseDataOk(context, errmsg.SUCCESS, data)
 
 }

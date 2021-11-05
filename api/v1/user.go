@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"star-server/middleware"
@@ -89,7 +88,7 @@ func GetUser(context *gin.Context) {
 
 	id, _ := strconv.Atoi(context.Param("uid"))
 	if id < 1 {
-		utils.ResponseOk(context, errmsg.ERROR)
+		utils.ResponseOk(context, errmsg.ParameterError)
 		return
 	}
 	uid := context.Keys["uid"]
@@ -121,7 +120,6 @@ func UpdateUser(context *gin.Context) {
 	user.ID = uint(id)
 
 	uid := context.Keys["uid"]
-	user.Authority = 0
 	if int(user.ID) == uid {
 		// 编辑用户资料
 		if model.EditUser(&user) == errmsg.ERROR {
@@ -140,7 +138,6 @@ func UpdateUserAuth(context *gin.Context) {
 	var user model.User
 	_ = context.ShouldBindJSON(&user)
 	var id, _ = strconv.Atoi(context.Param("uid"))
-	fmt.Println(user.ID)
 	user.ID = uint(id)
 
 	if id == context.Keys["uid"] {

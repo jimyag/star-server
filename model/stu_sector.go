@@ -18,7 +18,7 @@ func CreateStuSect(stuSector *StuSector) (code int) {
 	return errmsg.SUCCESS
 }
 
-func FindStuSectorUseSidSeName(data *StuSector) (StuSector, int) {
+func FindStuSectorUseSidSeName(data StuSector) (StuSector, int) {
 	var stuS StuSector
 	if result := db.Limit(1).Where("student_id=? and sector_name=?", data.StudentId, data.SectorName).Find(&stuS); result.RowsAffected == 0 {
 		return StuSector{}, errmsg.ERROR

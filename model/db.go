@@ -30,7 +30,7 @@ func InitDb() {
 		&Schedule{},
 		&Sector{},
 		&Student{},
-		&WorkForm{},
+		&Record{},
 		&Authentication{},
 		&SectorKey{},
 		&StuSector{})

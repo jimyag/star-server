@@ -4,7 +4,7 @@ import (
 	"star-server/utils/errmsg"
 )
 
-type WorkForm struct {
+type Record struct {
 	Model
 	BeginTime  int    `gorm:"type:int" json:"begin_time"`
 	EndTime    int    `gorm:"type:int" json:"end_time"`
@@ -13,30 +13,30 @@ type WorkForm struct {
 	StudentId  string `gorm:"type:char(10)" json:"student_id"`
 }
 
-func CreateForm(data *WorkForm) int {
+func CreateForm(data *Record) int {
 	if result := db.Create(&data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
 }
 
-func UpdateForm(data *WorkForm) int {
+func UpdateForm(data *Record) int {
 	if result := db.Model(&data).Updates(data); result.RowsAffected == 0 {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
 }
 
-func GetForms(studentId string) ([]WorkForm, int) {
-	var forms []WorkForm
+func GetForms(studentId string) ([]Record, int) {
+	var forms []Record
 	if result := db.Where("student_id=?", studentId).Find(&forms); result.RowsAffected == 0 {
 		return nil, errmsg.ERROR
 	}
 	return forms, errmsg.SUCCESS
 }
 
-func GetFormUseId(id uint) (WorkForm, int) {
-	var w WorkForm
+func GetFormUseId(id uint) (Record, int) {
+	var w Record
 	if result := db.Limit(1).Where("id=?", id).Find(&w); result.RowsAffected == 0 {
 		return w, errmsg.ERROR
 	}
