@@ -62,7 +62,7 @@ func InitRouter() {
 		// 学生
 		adminV1.POST("student", v1.CreateStudent)
 		// 一条值班记录
-		adminV1.POST("schedule", v1.AddOneRecord)
+		adminV1.POST("sector/:sector_name/schedule", v1.AddOneRecord)
 		//部门邀请码
 		adminV1.POST("sector/:sector_name/key", v1.CreateSectorKey)
 		// 更新用户权限
