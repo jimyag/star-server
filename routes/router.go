@@ -18,28 +18,27 @@ func InitRouter() {
 	authV1.Use(middleware.JwtToken())
 	{
 		//用户模块
-		authV1.PUT("user/:uid/update", v1.UpdateUser)
+		authV1.PUT("user/:uid", v1.UpdateUser)
 		authV1.GET("user/:uid", v1.GetUser)
-
 		//部门
-		authV1.POST("sector/:uid/join", v1.CreateStuSect)
-		authV1.GET("sector/:uid/find", v1.FindStuSector)
+		authV1.POST("user/:uid/sector", v1.CreateStuSect)
+		authV1.GET("user/:uid/sector", v1.FindStuSector)
 		//学生
 		authV1.GET("student/:student_id", v1.GetStudent)
 		//值班表
-		authV1.GET("schedule/:sector_name", v1.GetSchedule)
+		authV1.GET("sector/:sector_name/schedule", v1.GetSchedule)
 
 		// 工作记录
-		authV1.POST("workform/add", v1.CreateForm)
-		authV1.PUT("workform/update/:uid", v1.UpdateForm)
-		authV1.GET("workform/get/:student_id", v1.GetStuForm)
+		authV1.POST("user/:uid/record", v1.CreateForm)
+		authV1.PUT("user/:uid/record/:rid", v1.UpdateForm)
+		authV1.GET("user/:uid/record", v1.GetStuForm)
 		// todo 获得用户的工作情况
 
 	}
 	routerV1 := r.Group("api/v1")
 	{
 		// 注册
-		routerV1.POST("registration", v1.AddUser)
+		routerV1.POST("user", v1.AddUser)
 		// 紧急通知
 		routerV1.GET("notice", v1.GetNotice)
 		//文章
@@ -55,19 +54,19 @@ func InitRouter() {
 	adminV1.Use(middleware.AdminToken())
 	{
 		// 紧急通知
-		adminV1.POST("notice/add", v1.CreateNotice)
+		adminV1.POST("notice", v1.CreateNotice)
 		// 文章
-		adminV1.POST("article/add", v1.CreateArticle)
+		adminV1.POST("article", v1.CreateArticle)
 		//部门
-		adminV1.POST("sector/add", v1.CreateSector)
+		adminV1.POST("sector", v1.CreateSector)
 		// 学生
-		adminV1.POST("student/add", v1.CreateStudent)
+		adminV1.POST("student", v1.CreateStudent)
 		// 一条值班记录
-		adminV1.POST("schedule/add", v1.AddOneRecord)
+		adminV1.POST("schedule", v1.AddOneRecord)
 		//部门邀请码
-		adminV1.POST("sectorkey/add", v1.CreateSectorKey)
+		adminV1.POST("sector/:sector_name/key", v1.CreateSectorKey)
 		// 更新用户权限
-		adminV1.PUT("user/:uid/updateauth", v1.UpdateUserAuth)
+		adminV1.PUT("user/:uid/auth", v1.UpdateUserAuth)
 
 	}
 	err := r.Run(utils.HttpPort)
