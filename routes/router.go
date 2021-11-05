@@ -23,11 +23,8 @@ func InitRouter() {
 		//部门
 		authV1.POST("user/:uid/sector", v1.CreateStuSect)
 		authV1.GET("user/:uid/sector", v1.FindStuSector)
-		//学生
-		authV1.GET("student/:student_id", v1.GetStudent)
 		//值班表
 		authV1.GET("sector/:sector_name/schedule", v1.GetSchedule)
-
 		// 工作记录
 		authV1.POST("user/:uid/record", v1.CreateForm)
 		authV1.PUT("user/:uid/record/:rid", v1.UpdateForm)
@@ -61,6 +58,7 @@ func InitRouter() {
 		adminV1.POST("sector", v1.CreateSector)
 		// 学生
 		adminV1.POST("student", v1.CreateStudent)
+		adminV1.GET("student/:student_id", v1.GetStudent)
 		// 一条值班记录
 		adminV1.POST("sector/:sector_name/schedule", v1.AddOneRecord)
 		//部门邀请码
