@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"star-server/model"
 	"star-server/utils"
@@ -13,13 +14,20 @@ func CreateStuSect(context *gin.Context) {
 	var maps = make(map[string]string)
 	_ = context.ShouldBindJSON(&maps)
 	stuSect.Uid, _ = strconv.Atoi(context.Param("uid"))
+
 	uid := context.Keys["uid"]
 	if uid != stuSect.Uid {
 		utils.ResponseOk(context, errmsg.ERROR)
 		return
 	}
+	sectorName := context.Param("sector_name")
+	_, code := model.UseNameGetSector(sectorName)
+	if code == errmsg.ERROR {
+		utils.ResponseOk(context, errmsg.SectorNotExist)
+		return
+	}
 	stuSect.StudentId = maps["student_id"]
-	stuSect.SectorName = maps["sector_name"]
+	stuSect.SectorName = sectorName
 	real_key, code := model.UseSectorNameFindSectorKey(stuSect.SectorName)
 	if code == errmsg.ERROR {
 		utils.ResponseOk(context, errmsg.SectorKeyNotExist)
@@ -50,6 +58,7 @@ func CreateStuSect(context *gin.Context) {
 		utils.ResponseOk(context, errmsg.SectorKeyNotExist)
 		return
 	}
+	fmt.Println("111")
 	utils.ResponseOk(context, model.CreateStuSect(&stuSect))
 }
 
