@@ -21,7 +21,7 @@ func InitRouter() {
 		authV1.PUT("user/:uid", v1.UpdateUser)
 		authV1.GET("user/:uid", v1.GetUser)
 		//部门
-		authV1.POST("user/:uid/sector", v1.CreateStuSect)
+		authV1.POST("user/:uid/sector/:sector_name", v1.CreateStuSect)
 		authV1.GET("user/:uid/sector", v1.FindStuSector)
 		//值班表
 		authV1.GET("sector/:sector_name/schedule", v1.GetSchedule)
