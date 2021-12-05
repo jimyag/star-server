@@ -1,0 +1,64 @@
+{
+  "types": {
+    "refactor": {
+      "description": "在不影响代码的内部行为、功能下的代码修改"
+    },
+    "fix": {
+      "description": "修复了bug"
+    },
+    "feat": {
+      "description": "添加一个新功能、新特性"
+    },
+    "build": {
+      "description": "主要目的是修改项目构建系统(例如 glup，webpack，rollup 的配置等)的提交",
+      "scopes": {
+        "npm": {},
+        "gulp": {},
+        "broccoli": {}
+      }
+    },
+    "chore": {
+      "description": "不在其他 commit 类型中的修改，都可以用 chore 表示"
+    },
+    "style": {
+      "description": "不影响代码逻辑的更改，例如空格、格式设置、缺少分号"
+    },
+    "test": {
+      "description": "添加缺失测试或更正现有测试的用例"
+    },
+    "docs": {
+      "description": "文档修改"
+    },
+    "perf": {
+      "description": "优化相关。提高性能、体验的变化"
+    },
+    "ci": {
+      "description": "主要目的是修改项目继续集成流程(例如 Travis，Jenkins，GitLab CI，Circle等)的提交"
+    },
+    "revert": {
+      "description": "还原以前提交的更改"
+    }
+  },
+  "footerTypes": [
+    {
+      "name": "BREAKING CHANGE",
+      "description": "提交引入了重大的 API 更改"
+    },
+    {
+      "name": "Closes",
+      "description": "关闭某个pr或issues"
+    },
+    {
+      "name": "Implements",
+      "description": "提交实现功能"
+    },
+    {
+      "name": "Co-authored-by",
+      "description": "该提交由另一个人共同创作。<br/>对于多个人，每人使用一行"
+    },
+    {
+      "name": "Refs",
+      "description": "The commit references other commits by their hash ID.<br/>For multiple hash IDs use a comma as separator"
+    }
+  ]
+}
